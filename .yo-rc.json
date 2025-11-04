@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.19.0",
+    "sdksVersions": {},
+    "version": "1.21.1",
+    "libraryName": "site-config",
+    "libraryId": "4568d739-4956-4e4d-bfd2-3523fd73a68d",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "site-config",
+    "solutionShortDescription": "site-config description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "extension",
+    "extensionType": "ApplicationCustomizer"
+  }
+}

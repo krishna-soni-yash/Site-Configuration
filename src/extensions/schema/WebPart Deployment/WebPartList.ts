@@ -1,10 +1,12 @@
 export interface IWebPartEntry {
 	id: string;
 	pageName: string;
+	homePage?: boolean;
 }
 
 export const WebPartList: IWebPartEntry[] = [
-	{ id: '98f1f7fb-b4fe-41fb-bc15-3c916e4f230a', pageName: 'TestingKri' }
+	{ id: 'aec7bd2e-5d17-4a98-89c0-ddb541197235', pageName: 'PPOQaulity', homePage: true },
+	{ id: 'aec7bd2e-5d17-4a98-89c0-ddb541197235', pageName: 'TestKri', homePage: false },
 ];
 
 export default WebPartList;

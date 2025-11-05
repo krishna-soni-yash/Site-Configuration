@@ -2,7 +2,6 @@ import { Log } from '@microsoft/sp-core-library';
 import {
   BaseApplicationCustomizer
 } from '@microsoft/sp-application-base';
-import { Dialog } from '@microsoft/sp-dialog';
 
 import * as strings from 'SiteConfigApplicationCustomizerStrings';
 import { createPnpSpfx } from '../schema/Initialization';
@@ -35,11 +34,6 @@ export default class SiteConfigApplicationCustomizer
       message = '(No properties were provided.)';
     }
 
-    Dialog.alert(`Hello from ${strings.Title}:\n\n${message}`).catch(() => {
-      /* handle error */
-    });
-
-    // attempt to deploy configured web parts (uses the same PnP/SPFx context)
     try {
       await deployWebParts(sp as any);
     } catch (e) {

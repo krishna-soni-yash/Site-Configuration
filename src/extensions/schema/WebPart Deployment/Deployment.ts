@@ -31,6 +31,7 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 		const pageServerRelativeUrl = `${webRelNoSlash}/SitePages/${pageFileName}`;
 
 		let page: IClientsidePage | undefined = await loadExistingPage(sp, pageServerRelativeUrl);
+		let createdNewPage = false;
 
 		if (!page) {
 			page = await createClientsidePage(sp, pageFileName, entry.pageName);
@@ -38,18 +39,18 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 				console.error(`Failed to ensure page ${entry.pageName}, skipping webpart add.`);
 				continue;
 			}
+			createdNewPage = true;
 		}
+		const shouldSetAsHome = createdNewPage && entry.homePage === true;
 
 		try {
 			const alreadyHasWebpart = hasWebpart(page, entry.id);
 			if (alreadyHasWebpart) {
-				console.log(`Page ${entry.pageName} already contains webpart ${entry.id}, skipping add.`);
 				continue;
 			}
 
 			const componentDef = findWebpartDefinition(availableWebparts, entry.id);
 			if (!componentDef) {
-				console.warn(`Webpart definition not found for id ${entry.id}, skipping.`);
 				continue;
 			}
 
@@ -60,7 +61,9 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 			await page.save(true);
 			await finalizePage(sp, pageServerRelativeUrl);
 
-			console.log(`Ensured webpart ${entry.id} on page ${entry.pageName}`);
+			if (shouldSetAsHome) {
+				await setHomePage(sp, `SitePages/${pageFileName}`);
+			}
 		} catch (e) {
 			console.error(`Failed to add webpart ${entry.id} to page ${entry.pageName}:`, e);
 		}
@@ -74,7 +77,6 @@ async function loadExistingPage(sp: SPFI, pageServerRelativeUrl: string): Promis
 		await page.load();
 		return page;
 	} catch (error) {
-		// likely means the page does not exist yet
 		return undefined;
 	}
 }
@@ -90,7 +92,6 @@ async function createClientsidePage(sp: SPFI, fileName: string, title: string): 
 		console.warn(`addClientsidePage did not return a page instance for ${fileName}.`);
 		return undefined;
 	} catch (error) {
-		console.warn(`addClientsidePage failed for ${fileName}, attempting CreateClientsidePage fallback.`, error);
 		try {
 			const fallbackPage = await CreateClientsidePage(sp.web, fileName, title);
 			await fallbackPage.load();
@@ -125,7 +126,6 @@ async function getWebpartDefinitions(sp: SPFI): Promise<IClientsidePageComponent
 	try {
 		return await sp.web.getClientsideWebParts();
 	} catch (error) {
-		console.warn('Failed to retrieve clientsides webpart definitions.', error);
 		return [];
 	}
 }
@@ -163,6 +163,14 @@ async function finalizePage(sp: SPFI, pageServerRelativeUrl: string): Promise<vo
 		if (!message.includes("has not been checked out")) {
 			console.warn(`publish failed for ${pageServerRelativeUrl}`, error);
 		}
+	}
+}
+
+async function setHomePage(sp: SPFI, welcomePage: string): Promise<void> {
+	try {
+		await sp.web.rootFolder.update({ WelcomePage: welcomePage });
+	} catch (error) {
+		console.error(`Failed to set ${welcomePage} as the home page.`, error);
 	}
 }
 

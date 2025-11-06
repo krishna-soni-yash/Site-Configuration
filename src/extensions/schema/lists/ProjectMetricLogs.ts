@@ -16,6 +16,7 @@ type ProjectMetricLogsFieldName =
     | "VersionId"
     | "Status"
     | "PMComments"
+    | "BUHComments"
     | "ReviewerComments"
     | "CreatedVersion"
     | "IsActive";
@@ -39,6 +40,10 @@ const fieldDefinitions: readonly FieldDefinition<ProjectMetricLogsFieldName>[] =
         schemaXml: `<Field Type='Note' Name='PMComments' StaticName='PMComments' DisplayName='PMComments' NumLines='6' RichText='FALSE' />`
     },
     {
+        internalName: "BUHComments",
+        schemaXml: `<Field Type='Note' Name='BUHComments' StaticName='BUHComments' DisplayName='BUHComments' NumLines='6' RichText='FALSE' />`
+    },
+    {
         internalName: "ReviewerComments",
         schemaXml: `<Field Type='Note' Name='ReviewerComments' StaticName='ReviewerComments' DisplayName='ReviewerComments' NumLines='6' RichText='FALSE' />`
     },
@@ -58,6 +63,7 @@ const defaultViewFields: readonly ProjectMetricLogsFieldName[] = [
     "VersionId",
     "Status",
     "PMComments",
+    "BUHComments",
     "ReviewerComments",
     "CreatedVersion",
     "IsActive"

@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://ytpl.sharepoint.com/sites/qualitydev/testdevelopment/SitePages/Home.aspx",
+      "pageUrl": "https://ytpl.sharepoint.com/sites/qualityuat/HelloWorld/SitePages/Home.aspx",
       "customActions": {
         "f6eefdbb-a6d8-41e2-b1a0-48ede105d3f2": {
           "location": "ClientSideExtension.ApplicationCustomizer",

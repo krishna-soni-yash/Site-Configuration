@@ -239,12 +239,15 @@ export async function provisionProjectMetrics(sp: SPFI): Promise<void> {
 
     const fields = buildFieldDefinitions(logsListId);
 
+    const removeExistingFields: readonly ProjectMetricsFieldName[] = [];
+    
     const definition: ListProvisionDefinition<ProjectMetricsFieldName, ProjectMetricsViewField> = {
         title: LIST_TITLE,
         description: "Project metrics list",
         templateId: 100,
         fields,
-        defaultViewFields
+        defaultViewFields,
+        removeFields: removeExistingFields
     };
 
     await ensureListProvision(sp, definition);

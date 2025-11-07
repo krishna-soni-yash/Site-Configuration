@@ -12,7 +12,7 @@ import {
 
 const LIST_TITLE = RequiredListsProvision.EmailLogs;
 
-type EmailLogsFieldName = "Status" | "MailSentTo" | "VersionId" | "MailSentStatus";
+type EmailLogsFieldName = "Status" | "MailSentTo" | "VersionId" | "MailSentStatus" | "TestDesc";
 type EmailLogsViewField = EmailLogsFieldName | "LinkTitle" | "Author" | "Created";
 
 const fieldDefinitions: readonly FieldDefinition<EmailLogsFieldName>[] = [
@@ -31,6 +31,10 @@ const fieldDefinitions: readonly FieldDefinition<EmailLogsFieldName>[] = [
     {
         internalName: "MailSentStatus",
         schemaXml: `<Field Type='Note' Name='MailSentStatus' StaticName='MailSentStatus' DisplayName='MailSentStatus' NumLines='6' RichText='FALSE' />`
+    },
+    {
+        internalName: "TestDesc",
+        schemaXml: `<Field Type='Text' Name='TestDesc' StaticName='TestDesc' DisplayName='TestDesc' MaxLength='255' />`
     }
 ] as const;
 
@@ -44,12 +48,15 @@ const defaultViewFields: readonly EmailLogsViewField[] = [
     "Created"
 ] as const;
 
+const removeExistingFields: readonly EmailLogsFieldName[] = [];
+
 const definition: ListProvisionDefinition<EmailLogsFieldName, EmailLogsViewField> = {
     title: LIST_TITLE,
     description: "Email logs list",
     templateId: 100,
     fields: fieldDefinitions,
-    defaultViewFields
+    defaultViewFields,
+    removeFields: removeExistingFields
 };
 
 export async function provisionEmailLogs(sp: SPFI): Promise<void> {

@@ -29,7 +29,7 @@ export type FieldDefinition<TInternalName extends string> = {
     schemaXml: string;
 };
 
-export interface ViewDefinition<TViewField extends string> {
+interface ViewDefinition<TViewField extends string> {
     title: string;
     fields: readonly TViewField[];
     rowLimit?: number;
@@ -42,6 +42,8 @@ export interface ListProvisionDefinition<TFieldName extends string, TViewField e
     templateId?: number;
     fields?: readonly FieldDefinition<TFieldName>[];
     defaultViewFields?: readonly TViewField[];
+    /** Optional list of field internal names to remove from the list if they exist */
+    removeFields?: readonly TFieldName[];
     views?: readonly ViewDefinition<TViewField>[];
 }
 
@@ -64,6 +66,7 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         templateId = 100,
         fields = [],
         defaultViewFields = [],
+        removeFields = [],
         views = []
     } = definition;
 
@@ -74,6 +77,24 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         const exists = await fieldExists(sp, title, field.internalName);
         if (!exists) {
             await list.fields.createFieldAsXml(field.schemaXml);
+        }
+    }
+
+    if (removeFields.length > 0) {
+        for (const fieldName of removeFields) {
+            try {
+                const exists = await fieldExists(sp, title, fieldName);
+                if (exists) {
+                    await list.fields.getByInternalNameOrTitle(fieldName).delete();
+                    const defaultView = list.defaultView;
+                    const schemaXml = await defaultView.fields.getSchemaXml();
+                    if (schemaXml.includes(`Name=\"${fieldName}\"`) || schemaXml.includes(`Name='${fieldName}'`)) {
+                        await defaultView.fields.remove(fieldName);
+                    }
+                }
+            } catch (err) {
+                console.warn(`Failed to check existence of field ${fieldName} on list ${title}:`, err);
+            }
         }
     }
 

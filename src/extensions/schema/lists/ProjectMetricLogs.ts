@@ -69,12 +69,15 @@ const defaultViewFields: readonly ProjectMetricLogsFieldName[] = [
     "IsActive"
 ] as const;
 
+const removeExistingFields: readonly ProjectMetricLogsFieldName[] = [];
+
 const definition: ListProvisionDefinition<ProjectMetricLogsFieldName> = {
     title: LIST_TITLE,
     description: "Project metrics logs list",
     templateId: 100,
     fields: fieldDefinitions,
-    defaultViewFields
+    defaultViewFields,
+    removeFields: removeExistingFields
 };
 
 export async function provisionProjectMetricLogs(sp: SPFI): Promise<void> {

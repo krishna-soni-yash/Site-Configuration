@@ -4,9 +4,9 @@ import {
 } from '@microsoft/sp-application-base';
 
 import * as strings from 'SiteConfigApplicationCustomizerStrings';
-import { createPnpSpfx } from '../schema/Initialization';
+import { createPnpSpfx } from './Initialization';
 import deployWebParts from '../schema/WebPart Deployment/Deployment';
-import { provisionRequiredLists } from '../schema/RequiredListProvision';
+import { provisionRequiredLists } from '../schema/List Provision/RequiredListProvision';
 
 const LOG_SOURCE: string = 'SiteConfigApplicationCustomizer';
 

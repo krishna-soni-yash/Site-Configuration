@@ -4,11 +4,11 @@ import "@pnp/sp/lists";
 import "@pnp/sp/fields";
 import "@pnp/sp/views";
 import {
-    RequiredListsProvision,
     ensureListProvision,
     ListProvisionDefinition,
     FieldDefinition
-} from "../RequiredListProvision";
+} from "../GenericListProvision";
+import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.ProjectMetrics;
 

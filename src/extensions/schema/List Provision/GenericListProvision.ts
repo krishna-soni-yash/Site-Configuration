@@ -116,25 +116,74 @@ export async function addViewToList<TViewField extends string>(
     view: ViewDefinition<TViewField>
 ): Promise<void> {
     const list = sp.web.lists.getByTitle(listTitle);
-    const existingViews = await list.views.select("Title")();
-    const alreadyExists = existingViews.some((existing: { Title: string }) => existing.Title === view.title);
-    if (alreadyExists) {
-        return;
+    const viewFields = [...(view.fields as readonly string[])];
+    if (!viewFields.includes("LinkTitle")) {
+        viewFields.unshift("LinkTitle");
     }
 
-    const viewFields = [...view.fields];
-    await list.views.add(view.title, false, viewFields as any);
+    const existingViews = await list.views.select("Id", "Title")();
+    const existingView = existingViews.find(
+        (existing: { Id: string; Title: string }) => existing.Title === view.title
+    );
+
+    const ensureView = async () => {
+        if (existingView) {
+            return list.views.getById(existingView.Id);
+        }
+
+        const added = await (list.views as any).add(view.title, false);
+        if (added?.view) {
+            return added.view as any;
+        }
+        if (added?.data?.Id) {
+            return list.views.getById(added.data.Id);
+        }
+        return list.views.getByTitle(view.title);
+    };
+
+    const listView = await ensureView();
+
+    try {
+        if (typeof listView.fields?.removeAll === "function") {
+            await listView.fields.removeAll();
+        }
+    } catch (error) {
+        console.warn(`Failed to clear view fields for ${view.title} on ${listTitle}:`, error);
+    }
+
+    const appliedFields: string[] = [];
+    for (const field of viewFields) {
+        try {
+            await listView.fields.add(field as any);
+            appliedFields.push(field);
+        } catch (error) {
+            console.warn(`Failed to add field ${field} to view ${view.title} on list ${listTitle}:`, error);
+        }
+    }
+
+    if (appliedFields.length === 0) {
+        try {
+            await listView.fields.add("LinkTitle" as any);
+        } catch (error) {
+            console.warn(`Failed to ensure LinkTitle on view ${view.title} for list ${listTitle}:`, error);
+        }
+    }
 
     const updates: Record<string, unknown> = {};
     if (view.rowLimit !== undefined) {
         updates.RowLimit = view.rowLimit;
     }
-    if (view.makeDefault) {
-        updates.SetAsDefaultView = true;
-    }
 
     if (Object.keys(updates).length > 0) {
-        await list.views.getByTitle(view.title).update(updates);
+        await listView.update(updates);
+    }
+
+    if (view.makeDefault) {
+        try {
+            await listView.setAsDefault();
+        } catch (error) {
+            console.warn(`Failed to set ${view.title} as default view for list ${listTitle}:`, error);
+        }
     }
 }
 

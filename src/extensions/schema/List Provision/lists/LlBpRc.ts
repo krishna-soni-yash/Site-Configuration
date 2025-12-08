@@ -139,6 +139,7 @@ const definition: ListProvisionDefinition<LlBpRcFieldName, LlBpRcViewField> = {
 	description: "Lessons learnt, best practices, and reusable components",
 	templateId: 100,
 	fields: fieldDefinitions,
+	defaultViewFields: lessonsLearntViewFields,
 	views: viewDefinitions
 };
 

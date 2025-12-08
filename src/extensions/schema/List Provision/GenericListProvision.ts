@@ -16,6 +16,8 @@ interface ViewDefinition<TViewField extends string> {
     fields: readonly TViewField[];
     rowLimit?: number;
     makeDefault?: boolean;
+    includeLinkTitle?: boolean;
+    query?: string;
 }
 
 export interface ListProvisionDefinition<TFieldName extends string, TViewField extends string = TFieldName> {
@@ -116,8 +118,9 @@ export async function addViewToList<TViewField extends string>(
     view: ViewDefinition<TViewField>
 ): Promise<void> {
     const list = sp.web.lists.getByTitle(listTitle);
+    const includeLinkTitle = view.includeLinkTitle ?? true;
     const viewFields = [...(view.fields as readonly string[])];
-    if (!viewFields.includes("LinkTitle")) {
+    if (includeLinkTitle && !viewFields.includes("LinkTitle")) {
         viewFields.unshift("LinkTitle");
     }
 
@@ -161,7 +164,7 @@ export async function addViewToList<TViewField extends string>(
         }
     }
 
-    if (appliedFields.length === 0) {
+    if (appliedFields.length === 0 && includeLinkTitle) {
         try {
             await listView.fields.add("LinkTitle" as any);
         } catch (error) {
@@ -172,6 +175,10 @@ export async function addViewToList<TViewField extends string>(
     const updates: Record<string, unknown> = {};
     if (view.rowLimit !== undefined) {
         updates.RowLimit = view.rowLimit;
+    }
+
+    if (view.query !== undefined) {
+        updates.ViewQuery = view.query;
     }
 
     if (Object.keys(updates).length > 0) {

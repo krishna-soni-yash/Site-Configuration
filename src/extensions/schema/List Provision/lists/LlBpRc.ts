@@ -1,62 +1,149 @@
 import { SPFI } from "@pnp/sp";
-import { RequiredListsProvision } from "../RequiredListProvision";
-import {
-	ensureListProvision,
-	ensureListContentTypes,
-	ContentTypeBindingDefinition,
-	addViewToList
-} from "../GenericListProvision";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
-import "@pnp/sp/content-types";
 import "@pnp/sp/fields";
 import "@pnp/sp/views";
+import {
+	ensureListProvision,
+	FieldDefinition,
+	ListProvisionDefinition
+} from "../GenericListProvision";
+import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.LlBpRc;
 
-const CONTENT_TYPES: ReadonlyArray<ContentTypeBindingDefinition> = [
-    { id: "0x0100675A5D902917F5468E54C67BEC4A6765", name: "Lessons Learnt" },
-    { id: "0x010013D4E57092D07541AB01F187F1C1A283", name: "Best Practices" },
-    { id: "0x010063DA7C6C73EA594FA193E1333337F0E1", name: "Reusable Component" }
-];
+type LlBpRcFieldName =
+	| "DataType"
+	| "LlProblemFacedLearning"
+	| "LlCategory"
+	| "LlSolution"
+	| "LlRemarks"
+	| "BpBestPracticesDescription"
+	| "BpCategory"
+	| "BpRemarks"
+	| "RcComponentName"
+	| "RcLocation"
+	| "RcPurposeMainFunctionality"
+	| "RcRemarks"
+	| "Attachments";
 
-const LIST_VIEWS: ReadonlyArray<{
+type LlBpRcViewField = LlBpRcFieldName;
+
+const fieldDefinitions: readonly FieldDefinition<LlBpRcFieldName>[] = [
+	{
+		internalName: "DataType",
+		schemaXml: `<Field Type='Text' Name='DataType' StaticName='DataType' DisplayName='DataType' MaxLength='255' />`
+	},
+	{
+		internalName: "LlProblemFacedLearning",
+		schemaXml: `<Field Type='Text' Name='LlProblemFacedLearning' StaticName='LlProblemFacedLearning' DisplayName='LlProblemFacedLearning' MaxLength='255' />`
+	},
+	{
+		internalName: "LlCategory",
+		schemaXml: `<Field Type='Text' Name='LlCategory' StaticName='LlCategory' DisplayName='LlCategory' MaxLength='255' />`
+	},
+	{
+		internalName: "LlSolution",
+		schemaXml: `<Field Type='Text' Name='LlSolution' StaticName='LlSolution' DisplayName='LlSolution' MaxLength='255' />`
+	},
+	{
+		internalName: "LlRemarks",
+		schemaXml: `<Field Type='Note' Name='LlRemarks' StaticName='LlRemarks' DisplayName='LlRemarks' NumLines='6' RichText='FALSE' />`
+	},
+	{
+		internalName: "BpBestPracticesDescription",
+		schemaXml: `<Field Type='Note' Name='BpBestPracticesDescription' StaticName='BpBestPracticesDescription' DisplayName='BpBestPracticesDescription' NumLines='6' RichText='FALSE' />`
+	},
+	{
+		internalName: "BpCategory",
+		schemaXml: `<Field Type='Text' Name='BpCategory' StaticName='BpCategory' DisplayName='BpCategory' MaxLength='255' />`
+	},
+	{
+		internalName: "BpRemarks",
+		schemaXml: `<Field Type='Note' Name='BpRemarks' StaticName='BpRemarks' DisplayName='BpRemarks' NumLines='6' RichText='FALSE' />`
+	},
+	{
+		internalName: "RcComponentName",
+		schemaXml: `<Field Type='Text' Name='RcComponentName' StaticName='RcComponentName' DisplayName='RcComponentName' MaxLength='255' />`
+	},
+	{
+		internalName: "RcLocation",
+		schemaXml: `<Field Type='Text' Name='RcLocation' StaticName='RcLocation' DisplayName='RcLocation' MaxLength='255' />`
+	},
+	{
+		internalName: "RcPurposeMainFunctionality",
+		schemaXml: `<Field Type='Text' Name='RcPurposeMainFunctionality' StaticName='RcPurposeMainFunctionality' DisplayName='RcPurposeMainFunctionality' MaxLength='255' />`
+	},
+	{
+		internalName: "RcRemarks",
+		schemaXml: `<Field Type='Text' Name='RcRemarks' StaticName='RcRemarks' DisplayName='RcRemarks' MaxLength='255' />`
+	}
+] as const;
+
+const lessonsLearntViewFields: readonly LlBpRcViewField[] = [
+	"DataType",
+	"LlProblemFacedLearning",
+	"LlCategory",
+	"LlSolution",
+	"LlRemarks",
+	"Attachments"
+] as const;
+
+const bestPracticesViewFields: readonly LlBpRcViewField[] = [
+	"DataType",
+	"BpBestPracticesDescription",
+	"BpCategory",
+	"BpRemarks",
+	"Attachments"
+] as const;
+
+const reusableComponentsViewFields: readonly LlBpRcViewField[] = [
+	"DataType",
+	"RcComponentName",
+	"RcLocation",
+	"RcPurposeMainFunctionality",
+	"RcRemarks",
+	"Attachments"
+] as const;
+
+const viewDefinitions: ReadonlyArray<{
 	title: string;
-	fields: ReadonlyArray<string>;
+	fields: readonly LlBpRcViewField[];
 	makeDefault?: boolean;
+	includeLinkTitle?: boolean;
+	query?: string;
 }> = [
 	{
 		title: "Lessons Learnt",
-		fields: ["ProblemFacedLearning", "Category", "Solution", "Remarks"],
-		makeDefault: true
+		fields: lessonsLearntViewFields,
+		makeDefault: true,
+		includeLinkTitle: false,
+		query: `<Where><Eq><FieldRef Name='DataType' /><Value Type='Text'>LessonsLearnt</Value></Eq></Where>`
 	},
 	{
 		title: "Best Practices",
-		fields: ["BestPracticeDescription", "Reference", "Responsibility", "Remarks"]
+		fields: bestPracticesViewFields,
+		includeLinkTitle: false,
+		query: `<Where><Eq><FieldRef Name='DataType' /><Value Type='Text'>BestPractices</Value></Eq></Where>`
 	},
 	{
-		title: "Reusable Component",
-		fields: ["ComponentName", "Location", "PurposeMainFunctionality", "Responsibility", "Remarks"]
+		title: "Reusable Components",
+		fields: reusableComponentsViewFields,
+		includeLinkTitle: false,
+		query: `<Where><Eq><FieldRef Name='DataType' /><Value Type='Text'>ReusableComponents</Value></Eq></Where>`
 	}
 ];
 
+const definition: ListProvisionDefinition<LlBpRcFieldName, LlBpRcViewField> = {
+	title: LIST_TITLE,
+	description: "Lessons learnt, best practices, and reusable components",
+	templateId: 100,
+	fields: fieldDefinitions,
+	views: viewDefinitions
+};
+
 export async function provisionLlBpRc(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, {
-		title: LIST_TITLE,
-		description: "Lessons Learnt, Best Practices, Reusable Component list",
-		templateId: 100,
-		defaultViewFields: ["LinkTitle"],
-        views: LIST_VIEWS
-	});
-
-	await ensureListContentTypes(sp, LIST_TITLE, CONTENT_TYPES, {
-		ensureOnWeb: true,
-		removeDefaultContentType: true
-	});
-
-	for (const view of LIST_VIEWS) {
-		await addViewToList(sp, LIST_TITLE, view);
-	}
+	await ensureListProvision(sp, definition);
 }
 
 export default provisionLlBpRc;

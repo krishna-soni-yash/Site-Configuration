@@ -26,10 +26,12 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionEmailLogs } = await import('./lists/EmailLogs');
     //const { provisionProjectMetrics } = await import('./lists/ProjectMetrics');
     const { provisionManagementTaskLog } = await import('./lists/ManagementTaskLog');
+    const { provisionManagementEffortLog } = await import('./lists/ManagementEffortLog');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
     //await provisionEmailLogs(sp);
     //await provisionProjectMetrics(sp);
     await provisionManagementTaskLog(sp);
+    await provisionManagementEffortLog(sp);
 }

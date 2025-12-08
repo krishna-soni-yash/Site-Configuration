@@ -13,19 +13,19 @@ import { RequiredListsProvision } from "../RequiredListProvision";
 const LIST_TITLE = RequiredListsProvision.ManagementTaskLog;
 
 type ManagementTaskLogFieldName =
+    | "TaskDescription"
+    | "Phase"
     | "Activity"
     | "Responsibility"
-    | "TaskDescription"
     | "PlannedStartDate"
     | "PlannedEndDate"
     | "PlannedEffortHrs"
     | "TaskStatus"
-    | "Phase"
     | "Remarks"
     | "Completion"
     | "CompletionCount";
 
-type ManagementTaskLogViewField = ManagementTaskLogFieldName | "LinkTitle" | "Editor" | "Modified";
+type ManagementTaskLogViewField = ManagementTaskLogFieldName | "Editor" | "Modified";
 
 const fieldDefinitions: readonly FieldDefinition<ManagementTaskLogFieldName>[] = [
     {
@@ -66,20 +66,20 @@ const fieldDefinitions: readonly FieldDefinition<ManagementTaskLogFieldName>[] =
     },
     {
         internalName: "Completion",
-        schemaXml: `<Field Type='Boolean' Name='Completion' StaticName='Completion' DisplayName='Completion' />`
+        schemaXml: `<Field Type='Boolean' Name='Completion' StaticName='Completion' DisplayName='Completion' Default='0' />`
     },
     {
         internalName: "CompletionCount",
-        schemaXml: `<Field Type='Number' Name='CompletionCount' StaticName='CompletionCount' DisplayName='CompletionCount' Decimals='0' />`
+        schemaXml: `<Field Type='Number' Name='CompletionCount' StaticName='CompletionCount' DisplayName='CompletionCount' Decimals='0' Default='0' />`
     }
 ] as const;
 
 const defaultViewFields: readonly ManagementTaskLogViewField[] = [
-    "LinkTitle",
+    "TaskDescription",
+    "Phase",
     "Activity",
     "Responsibility",
     "TaskStatus",
-    "Phase",
     "PlannedStartDate",
     "PlannedEndDate",
     "PlannedEffortHrs",

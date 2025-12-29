@@ -1,11 +1,11 @@
 export interface IWebPartEntry {
-	id: string;
+	webPartIds: string[];
 	pageName: string;
 	homePage?: boolean;
 }
 
 export const WebPartList: IWebPartEntry[] = [
-	//{ id: 'aec7bd2e-5d17-4a98-89c0-ddb541197235', pageName: 'PPOQuality', homePage: true },
+	{ webPartIds: ['b244e89f-48d8-4cd7-b447-c9c5b4ccafa9', 'c2bf64bf-1b62-4aaf-9064-5b0793ce1829'], pageName: 'AuditFacilitation', homePage: false },
 ];
 
 export default WebPartList;

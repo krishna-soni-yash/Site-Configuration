@@ -62,7 +62,7 @@ function buildFieldDefinitions(managementTaskLogListId: string): FieldDefinition
 		},
 		{
 			internalName: "ManagementTaskID",
-			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${managementTaskLogListId}' ShowField='Title' />`
+			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${managementTaskLogListId}' ShowField='ID' LookupId='TRUE' />`
 		}
 	];
 }

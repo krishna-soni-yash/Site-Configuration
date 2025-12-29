@@ -53,7 +53,7 @@ const fieldDefinitions: readonly FieldDefinition<MinutesOfMeetingFieldName>[] = 
 	},
 	{
 		internalName: "CalledBy",
-		schemaXml: `<Field Type='User' Name='CalledBy' StaticName='CalledBy' DisplayName='CalledBy' UserSelectionMode='PeopleOnly' Mult='FALSE' />`
+		schemaXml: `<Field Type='User' Name='CalledBy' StaticName='CalledBy' DisplayName='CalledBy' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
 	},
 	{
 		internalName: "StartTime",
@@ -65,7 +65,7 @@ const fieldDefinitions: readonly FieldDefinition<MinutesOfMeetingFieldName>[] = 
 	},
 	{
 		internalName: "MinutedBy",
-		schemaXml: `<Field Type='User' Name='MinutedBy' StaticName='MinutedBy' DisplayName='MinutedBy' UserSelectionMode='PeopleOnly' Mult='FALSE' />`
+		schemaXml: `<Field Type='User' Name='MinutedBy' StaticName='MinutedBy' DisplayName='MinutedBy' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
 	}
 ] as const;
 

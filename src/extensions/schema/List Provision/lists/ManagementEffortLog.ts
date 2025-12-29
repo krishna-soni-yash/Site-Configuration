@@ -47,7 +47,7 @@ function buildFieldDefinitions(taskLogListId: string): FieldDefinition<Managemen
 		},
 		{
 			internalName: "ManagementTaskID",
-			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${taskLogListId}' ShowField='Title' />`
+			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${taskLogListId}' ShowField='ID' LookupId='TRUE' />`
 		},
 		{
 			internalName: "Completion",

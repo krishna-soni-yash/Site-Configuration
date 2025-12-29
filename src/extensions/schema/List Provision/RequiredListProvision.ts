@@ -16,7 +16,8 @@ export const RequiredListsProvision = {
     FacilitationReports: "FacilitationReports",
 
     //MOM & Action Items List
-    MinutesOfMeeting: "MinutesOfMeeting"
+    MinutesOfMeeting: "MinutesOfMeeting",
+    ActionItemsTracker: "ActionItemsTracker"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -28,17 +29,19 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionProjectMetricLogs } = await import('./lists/ProjectMetricLogs');
     //const { provisionEmailLogs } = await import('./lists/EmailLogs');
     //const { provisionProjectMetrics } = await import('./lists/ProjectMetrics');
-    //const { provisionManagementTaskLog } = await import('./lists/ManagementTaskLog');
-    //const { provisionManagementEffortLog } = await import('./lists/ManagementEffortLog');
-    //const { provisionFacilitationReport } = await import('./lists/FacilitationReport');
-    const { provisionMinutesOfMeeting } = await import('./lists/MinutesOfMeeting');
+    const { provisionManagementTaskLog } = await import('./lists/ManagementTaskLog');
+    const { provisionManagementEffortLog } = await import('./lists/ManagementEffortLog');
+    const { provisionFacilitationReport } = await import('./lists/FacilitationReport');
+    //const { provisionMinutesOfMeeting } = await import('./lists/MinutesOfMeeting');
+    //const { provisionActionItemsTracker } = await import('./lists/ActionItemsTracker');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
     //await provisionEmailLogs(sp);
     //await provisionProjectMetrics(sp);
-    //await provisionManagementTaskLog(sp);
-    //await provisionManagementEffortLog(sp);
-    //await provisionFacilitationReport(sp);
-    await provisionMinutesOfMeeting(sp);
+    await provisionManagementTaskLog(sp);
+    await provisionManagementEffortLog(sp);
+    await provisionFacilitationReport(sp);
+    //await provisionMinutesOfMeeting(sp);
+    //await provisionActionItemsTracker(sp);
 }

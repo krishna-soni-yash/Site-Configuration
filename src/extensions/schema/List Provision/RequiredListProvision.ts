@@ -17,7 +17,8 @@ export const RequiredListsProvision = {
 
     //MOM & Action Items List
     MinutesOfMeeting: "MinutesOfMeeting",
-    ActionItemsTracker: "ActionItemsTracker"
+    ActionItemsTracker: "ActionItemsTracker",
+    AdjustmentFactorValue: "AdjustmentFactorValue",
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -29,19 +30,21 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionProjectMetricLogs } = await import('./lists/ProjectMetricLogs');
     //const { provisionEmailLogs } = await import('./lists/EmailLogs');
     //const { provisionProjectMetrics } = await import('./lists/ProjectMetrics');
-    const { provisionManagementTaskLog } = await import('./lists/ManagementTaskLog');
-    const { provisionManagementEffortLog } = await import('./lists/ManagementEffortLog');
-    const { provisionFacilitationReport } = await import('./lists/FacilitationReport');
+    //const { provisionManagementTaskLog } = await import('./lists/ManagementTaskLog');
+    //const { provisionManagementEffortLog } = await import('./lists/ManagementEffortLog');
+    //const { provisionFacilitationReport } = await import('./lists/FacilitationReport');
     //const { provisionMinutesOfMeeting } = await import('./lists/MinutesOfMeeting');
     //const { provisionActionItemsTracker } = await import('./lists/ActionItemsTracker');
+    const { provisionAdjustmentFactorValue } = await import('./lists/AdjustmentFactorValue');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
     //await provisionEmailLogs(sp);
     //await provisionProjectMetrics(sp);
-    await provisionManagementTaskLog(sp);
-    await provisionManagementEffortLog(sp);
-    await provisionFacilitationReport(sp);
+    //await provisionManagementTaskLog(sp);
+    //await provisionManagementEffortLog(sp);
+    //await provisionFacilitationReport(sp);
     //await provisionMinutesOfMeeting(sp);
     //await provisionActionItemsTracker(sp);
+    await provisionAdjustmentFactorValue(sp);
 }

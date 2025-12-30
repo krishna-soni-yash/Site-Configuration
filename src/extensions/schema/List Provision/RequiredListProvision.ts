@@ -22,7 +22,8 @@ export const RequiredListsProvision = {
 
     AdjustmentFactorValue: "AdjustmentFactorValue",
     AMSMTTR: "AMSMTTR",
-    ComplexityWeightage: "ComplexityWeightage"
+    ComplexityWeightage: "ComplexityWeightage",
+    ImpactValue: "ImpactValue"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -42,6 +43,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionAdjustmentFactorValue } = await import('./lists/AdjustmentFactorValue');
     //const { provisionAMSMTTR } = await import('./lists/AMSMTTR');
     //const { provisionComplexityWeightage } = await import('./lists/ComplexityWeightage');
+    const { provisionImpactValue } = await import('./lists/ImpactValue');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
@@ -55,4 +57,5 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //await provisionAdjustmentFactorValue(sp);
     //await provisionAMSMTTR(sp);
     //await provisionComplexityWeightage(sp);
+    await provisionImpactValue(sp);
 }

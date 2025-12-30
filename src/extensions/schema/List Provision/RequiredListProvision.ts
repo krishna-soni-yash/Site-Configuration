@@ -26,6 +26,7 @@ export const RequiredListsProvision = {
     ImpactValue: "ImpactValue",
     PotentialBenefit: "PotentialBenefit",
     PotentialCost: "PotentialCost",
+    RAIDLogs: "RAIDLogs",
     ProbabilityValue: "ProbabilityValue",
     RAIDDescription: "RAIDDescription"
 };
@@ -52,7 +53,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionPotentialCost } = await import('./lists/PotentialCost');
     //const { provisionProbabilityValue } = await import('./lists/ProbabilityValue');
     //const { provisionRAIDDescription } = await import('./lists/RAIDDescription');
-    const { provisionRAIDDescription } = await import('./lists/RAIDDescription');
+    const { provisionRAIDLogs } = await import('./lists/RAIDLogs');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
@@ -71,5 +72,5 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //await provisionPotentialCost(sp);
     //await provisionProbabilityValue(sp);
     //await provisionRAIDDescription(sp);
-    await provisionRAIDDescription(sp);
+    await provisionRAIDLogs(sp);
 }

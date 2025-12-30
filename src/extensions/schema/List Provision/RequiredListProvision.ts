@@ -18,7 +18,10 @@ export const RequiredListsProvision = {
     //MOM & Action Items List
     MinutesOfMeeting: "MinutesOfMeeting",
     ActionItemsTracker: "ActionItemsTracker",
+
+
     AdjustmentFactorValue: "AdjustmentFactorValue",
+    AMSMTTR: "AMSMTTR"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -35,7 +38,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionFacilitationReport } = await import('./lists/FacilitationReport');
     //const { provisionMinutesOfMeeting } = await import('./lists/MinutesOfMeeting');
     //const { provisionActionItemsTracker } = await import('./lists/ActionItemsTracker');
-    const { provisionAdjustmentFactorValue } = await import('./lists/AdjustmentFactorValue');
+    //const { provisionAdjustmentFactorValue } = await import('./lists/AdjustmentFactorValue');
+    const { provisionAMSMTTR } = await import('./lists/AMSMTTR');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
@@ -46,5 +50,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //await provisionFacilitationReport(sp);
     //await provisionMinutesOfMeeting(sp);
     //await provisionActionItemsTracker(sp);
-    await provisionAdjustmentFactorValue(sp);
+    //await provisionAdjustmentFactorValue(sp);
+    await provisionAMSMTTR(sp);
 }

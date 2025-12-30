@@ -27,10 +27,6 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 	const availableWebparts = await getWebpartDefinitions(sp);
 
 	for (const entry of WebPartList) {
-		const componentIds = entry.webPartIds || [];
-		if (componentIds.length === 0) {
-			continue;
-		}
 		const pageFileName = `${entry.pageName}.aspx`;
 		const pageServerRelativeUrl = `${webRelNoSlash}/SitePages/${pageFileName}`;
 
@@ -46,34 +42,30 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 			createdNewPage = true;
 		}
 		const shouldSetAsHome = createdNewPage && entry.homePage === true;
-		let addedWebpart = false;
 
-		for (const componentId of componentIds) {
-			try {
-				const alreadyHasWebpart = hasWebpart(page, componentId);
-				if (alreadyHasWebpart) {
-					continue;
-				}
-
-				const componentDef = findWebpartDefinition(availableWebparts, componentId);
-				if (!componentDef) {
-					continue;
-				}
-
-				const webpartControl = ClientsideWebpart.fromComponentDef(componentDef);
-				const targetColumn = ensureDefaultColumn(page);
-				targetColumn.addControl(webpartControl);
-
-				await page.save(true);
-				await finalizePage(sp, pageServerRelativeUrl);
-				addedWebpart = true;
-			} catch (e) {
-				console.error(`Failed to add webpart ${componentId} to page ${entry.pageName}:`, e);
+		try {
+			const alreadyHasWebpart = hasWebpart(page, entry.id);
+			if (alreadyHasWebpart) {
+				continue;
 			}
-		}
 
-		if (shouldSetAsHome && addedWebpart) {
-			await setHomePage(sp, `SitePages/${pageFileName}`);
+			const componentDef = findWebpartDefinition(availableWebparts, entry.id);
+			if (!componentDef) {
+				continue;
+			}
+
+			const webpartControl = ClientsideWebpart.fromComponentDef(componentDef);
+			const targetColumn = ensureDefaultColumn(page);
+			targetColumn.addControl(webpartControl);
+
+			await page.save(true);
+			await finalizePage(sp, pageServerRelativeUrl);
+
+			if (shouldSetAsHome) {
+				await setHomePage(sp, `SitePages/${pageFileName}`);
+			}
+		} catch (e) {
+			console.error(`Failed to add webpart ${entry.id} to page ${entry.pageName}:`, e);
 		}
 	}
 }

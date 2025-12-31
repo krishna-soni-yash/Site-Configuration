@@ -28,7 +28,9 @@ export const RequiredListsProvision = {
     PotentialCost: "PotentialCost",
     RAIDLogs: "RAIDLogs",
     ProbabilityValue: "ProbabilityValue",
-    RAIDDescription: "RAIDDescription"
+    RAIDDescription: "RAIDDescription",
+
+    RootCauseAnalysis: "RootCauseAnalysis",
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -53,7 +55,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionPotentialCost } = await import('./lists/PotentialCost');
     //const { provisionProbabilityValue } = await import('./lists/ProbabilityValue');
     //const { provisionRAIDDescription } = await import('./lists/RAIDDescription');
-    const { provisionRAIDLogs } = await import('./lists/RAIDLogs');
+    //const { provisionRAIDLogs } = await import('./lists/RAIDLogs');
+    const { provisionRootCauseAnalysis } = await import('./lists/RootCauseAnalysis');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
@@ -72,5 +75,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //await provisionPotentialCost(sp);
     //await provisionProbabilityValue(sp);
     //await provisionRAIDDescription(sp);
-    await provisionRAIDLogs(sp);
+    //await provisionRAIDLogs(sp);
+    await provisionRootCauseAnalysis(sp);
 }

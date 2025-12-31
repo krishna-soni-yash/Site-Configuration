@@ -8,8 +8,9 @@ import {
     FieldDefinition,
     ListProvisionDefinition
 } from "../GenericListProvision";
+import { RequiredListsProvision } from "../RequiredListProvision";
 
-const LIST_TITLE = "AMSTicketLog";
+const LIST_TITLE = RequiredListsProvision.AMSTicketLog;
 
 type AMSTicketLogFieldName =
     | "TicketDescription"

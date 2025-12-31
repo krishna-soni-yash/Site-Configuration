@@ -30,6 +30,7 @@ export const RequiredListsProvision = {
     ProbabilityValue: "ProbabilityValue",
     RAIDDescription: "RAIDDescription",
     AMSTicketLog: "AMSTicketLog",
+    AMSTicketEffortLog: "AMSTicketEffortLog",
 
     RootCauseAnalysis: "RootCauseAnalysis",
     CustomerSatisfactionIndex: "Customer Satisfaction Index",
@@ -64,7 +65,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionCustomerSatisfactionIndex } = await import('./lists/CustomerSatisfactionIndex');
     //const { provisionWorkLogManagement } = await import('./lists/WorkLogManagement');
     //const { provisionTaskManagement } = await import('./lists/TaskManagement');
-    const { provisionAMSTicketLog } = await import('./lists/AMSTicketLog');
+    //const { provisionAMSTicketLog } = await import('./lists/AMSTicketLog');
+    const {provisionAMSTicketEffortLog} = await import('./lists/AMSTicketEffortLog');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
@@ -88,5 +90,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //await provisionCustomerSatisfactionIndex(sp);
     //await provisionWorkLogManagement(sp);
     //await provisionTaskManagement(sp);
-    await provisionAMSTicketLog(sp);
+    //await provisionAMSTicketLog(sp);
+    await provisionAMSTicketEffortLog(sp);
 }

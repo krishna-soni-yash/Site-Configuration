@@ -9,8 +9,9 @@ import {
     ListProvisionDefinition
 } from "../GenericListProvision";
 import { provisionWorkLogManagement } from "./WorkLogManagement";
+import { RequiredListsProvision } from "../RequiredListProvision";
 
-const LIST_TITLE = "TaskManagement";
+const LIST_TITLE = RequiredListsProvision.TaskManagement;
 
 type TaskManagementFieldName =
     | "WorkItemNo"

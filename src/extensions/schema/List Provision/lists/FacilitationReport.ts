@@ -10,7 +10,7 @@ import {
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
-const LIST_TITLE = RequiredListsProvision.FacilitationReports;
+const LIST_TITLE = RequiredListsProvision.FacilitationReport;
 
 type FacilitationReportFieldName =
 	| "Category"

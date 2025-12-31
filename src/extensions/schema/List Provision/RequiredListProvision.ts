@@ -32,7 +32,8 @@ export const RequiredListsProvision = {
 
     RootCauseAnalysis: "RootCauseAnalysis",
     CustomerSatisfactionIndex: "Customer Satisfaction Index",
-    WorkLogManagement: "WorkLogManagement"
+    WorkLogManagement: "WorkLogManagement",
+    TaskManagement: "TaskManagement"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -60,7 +61,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //const { provisionRAIDLogs } = await import('./lists/RAIDLogs');
     //const { provisionRootCauseAnalysis } = await import('./lists/RootCauseAnalysis');
     //const { provisionCustomerSatisfactionIndex } = await import('./lists/CustomerSatisfactionIndex');
-    const { provisionWorkLogManagement } = await import('./lists/WorkLogManagement');
+    //const { provisionWorkLogManagement } = await import('./lists/WorkLogManagement');
+    const { provisionTaskManagement } = await import('./lists/TaskManagement');
 
     //await provisionLlBpRc(sp);
     //await provisionProjectMetricLogs(sp);
@@ -82,5 +84,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     //await provisionRAIDLogs(sp);
     //await provisionRootCauseAnalysis(sp);
     //await provisionCustomerSatisfactionIndex(sp);
-    await provisionWorkLogManagement(sp);
+    //await provisionWorkLogManagement(sp);
+    await provisionTaskManagement(sp);
 }

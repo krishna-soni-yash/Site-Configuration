@@ -196,6 +196,7 @@ const definition: ListProvisionDefinition<RootCauseAnalysisFieldName, RootCauseA
 
 export async function provisionRootCauseAnalysis(sp: SPFI): Promise<void> {
     await ensureListProvision(sp, definition);
+    await sp.web.lists.getByTitle(LIST_TITLE).fields.getByInternalNameOrTitle("Title").update({ Title: "Problem Statement" });
 }
 
 export default provisionRootCauseAnalysis;

@@ -38,6 +38,7 @@ export const RequiredListsProvision = {
     CustomerSatisfactionIndex: "Customer Satisfaction Index",
     WorkLogManagement: "WorkLogManagement",
     TaskManagement: "TaskManagement",
+    CodeReviewDefects: "CodeReviewDefects",
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -71,6 +72,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     // const {provisionAMSTicketEffortLog} = await import('./lists/AMSTicketEffortLog');
     // const { provisionEmailErrorLogs } = await import('./lists/EmailErrorLogs');
     // const { provisionQualityActivities } = await import('./lists/QualityActivities');
+    //const { provisionCodeReviewDefects } = await import('./lists/CodeReviewDefects');
+    const { provisionCodeReviewDefects } = await import('./lists/CodeReviewDefects');
 
     // provisionLlBpRc(sp);
     // provisionProjectMetricLogs(sp);
@@ -98,4 +101,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     // provisionAMSTicketEffortLog(sp);
     // provisionEmailErrorLogs(sp);
     // provisionQualityActivities(sp);
+    // provisionCodeReviewDefects(sp);
+    provisionCodeReviewDefects(sp);
 }

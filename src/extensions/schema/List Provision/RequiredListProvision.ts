@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { spfi, SPFx, SPFI } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";

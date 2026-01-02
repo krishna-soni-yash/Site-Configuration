@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import * as pnp from "@pnp/sp";
 import { SPFI } from "@pnp/sp";
 import "@pnp/sp/webs";

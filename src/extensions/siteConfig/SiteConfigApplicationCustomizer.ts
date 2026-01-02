@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { Log } from '@microsoft/sp-core-library';
 import {
   BaseApplicationCustomizer

@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { SPFI } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -19,7 +20,8 @@ type ManagementEffortLogFieldName =
 	| "ActualEffortHrs"
 	| "UpdatedBy"
 	| "ManagementTaskID"
-	| "Completion";
+	| "Completion"
+	| "Remarks";
 
 type ManagementEffortLogViewField = ManagementEffortLogFieldName | "Editor" | "Modified";
 
@@ -47,11 +49,15 @@ function buildFieldDefinitions(taskLogListId: string): FieldDefinition<Managemen
 		},
 		{
 			internalName: "ManagementTaskID",
-			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${taskLogListId}' ShowField='Title' />`
+			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${taskLogListId}' ShowField='ID' LookupId='TRUE' />`
 		},
 		{
 			internalName: "Completion",
 			schemaXml: `<Field Type='Boolean' Name='Completion' StaticName='Completion' DisplayName='Completion' Default='0' />`
+		},
+		{
+			internalName: "Remarks",
+			schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />`
 		}
 	];
 }
@@ -63,7 +69,8 @@ const defaultViewFields: readonly ManagementEffortLogViewField[] = [
 	"ActualEffortHrs",
 	"UpdatedBy",
 	"ManagementTaskID",
-	"Completion"
+	"Completion",
+	"Remarks"
 ] as const;
 
 const removeExistingFields: readonly ManagementEffortLogFieldName[] = [];

@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { SPFI } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -83,6 +84,7 @@ const textFieldNames: readonly ProjectMetricsFieldName[] = [
     "ProjectType",
     "Quantitative",
     "Statistical",
+    "Metrics",
     "SubApplicability",
     "SubBaselineAndRevisionFrequency",
     "SubDataAnalysisFrequency",

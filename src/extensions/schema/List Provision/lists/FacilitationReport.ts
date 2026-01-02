@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { SPFI } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -10,7 +11,7 @@ import {
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
-const LIST_TITLE = RequiredListsProvision.FacilitationReports;
+const LIST_TITLE = RequiredListsProvision.FacilitationReport;
 
 type FacilitationReportFieldName =
 	| "Category"
@@ -62,7 +63,7 @@ function buildFieldDefinitions(managementTaskLogListId: string): FieldDefinition
 		},
 		{
 			internalName: "ManagementTaskID",
-			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${managementTaskLogListId}' ShowField='Title' />`
+			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${managementTaskLogListId}' ShowField='ID' LookupId='TRUE' />`
 		}
 	];
 }

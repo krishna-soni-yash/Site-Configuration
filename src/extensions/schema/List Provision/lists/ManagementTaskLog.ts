@@ -34,7 +34,7 @@ const fieldDefinitions: readonly FieldDefinition<ManagementTaskLogFieldName>[] =
     },
     {
         internalName: "Responsibility",
-        schemaXml: `<Field Type='User' Name='Responsibility' StaticName='Responsibility' DisplayName='Responsibility' UserSelectionMode='PeopleOnly' Mult='FALSE' />`
+        schemaXml: `<Field Type='User' Name='Responsibility' StaticName='Responsibility' DisplayName='Responsibility' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
     },
     {
         internalName: "TaskDescription",

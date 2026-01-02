@@ -20,7 +20,8 @@ type ManagementEffortLogFieldName =
 	| "ActualEffortHrs"
 	| "UpdatedBy"
 	| "ManagementTaskID"
-	| "Completion";
+	| "Completion"
+	| "Remarks";
 
 type ManagementEffortLogViewField = ManagementEffortLogFieldName | "Editor" | "Modified";
 
@@ -53,6 +54,10 @@ function buildFieldDefinitions(taskLogListId: string): FieldDefinition<Managemen
 		{
 			internalName: "Completion",
 			schemaXml: `<Field Type='Boolean' Name='Completion' StaticName='Completion' DisplayName='Completion' Default='0' />`
+		},
+		{
+			internalName: "Remarks",
+			schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />`
 		}
 	];
 }
@@ -64,7 +69,8 @@ const defaultViewFields: readonly ManagementEffortLogViewField[] = [
 	"ActualEffortHrs",
 	"UpdatedBy",
 	"ManagementTaskID",
-	"Completion"
+	"Completion",
+	"Remarks"
 ] as const;
 
 const removeExistingFields: readonly ManagementEffortLogFieldName[] = [];

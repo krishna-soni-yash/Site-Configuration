@@ -14,7 +14,7 @@ export const RequiredListsProvision = {
     //Audit & Facilitation Lists
     ManagementTaskLog: "ManagementTaskLog",
     ManagementEffortLog: "ManagementEffortLog",
-    FacilitationReport: "FacilitationReports",
+    FacilitationReport: "FacilitationReport",
 
     //MOM & Action Items List
     MinutesOfMeeting: "MinutesOfMeeting",

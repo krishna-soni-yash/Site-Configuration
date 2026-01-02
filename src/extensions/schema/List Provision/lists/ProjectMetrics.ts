@@ -84,6 +84,7 @@ const textFieldNames: readonly ProjectMetricsFieldName[] = [
     "ProjectType",
     "Quantitative",
     "Statistical",
+    "Metrics",
     "SubApplicability",
     "SubBaselineAndRevisionFrequency",
     "SubDataAnalysisFrequency",

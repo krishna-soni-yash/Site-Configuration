@@ -19,7 +19,6 @@ export const RequiredListsProvision = {
     MinutesOfMeeting: "MinutesOfMeeting",
     ActionItemsTracker: "ActionItemsTracker",
 
-
     AdjustmentFactorValue: "AdjustmentFactorValue",
     AMSMTTR: "AMSMTTR",
     ComplexityWeightage: "ComplexityWeightage",
@@ -39,6 +38,7 @@ export const RequiredListsProvision = {
     WorkLogManagement: "WorkLogManagement",
     TaskManagement: "TaskManagement",
     CodeReviewDefects: "CodeReviewDefects",
+    TestingDefects: "Testing Defects",
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -73,7 +73,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     // const { provisionEmailErrorLogs } = await import('./lists/EmailErrorLogs');
     // const { provisionQualityActivities } = await import('./lists/QualityActivities');
     //const { provisionCodeReviewDefects } = await import('./lists/CodeReviewDefects');
-    const { provisionCodeReviewDefects } = await import('./lists/CodeReviewDefects');
+    //const { provisionCodeReviewDefects } = await import('./lists/CodeReviewDefects');
+    const { provisionTestingDefects } = await import('./lists/TestingDefects');
 
     // provisionLlBpRc(sp);
     // provisionProjectMetricLogs(sp);
@@ -102,5 +103,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     // provisionEmailErrorLogs(sp);
     // provisionQualityActivities(sp);
     // provisionCodeReviewDefects(sp);
-    provisionCodeReviewDefects(sp);
+    //provisionCodeReviewDefects(sp);
+    provisionTestingDefects(sp);
 }

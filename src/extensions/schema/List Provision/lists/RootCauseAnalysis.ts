@@ -55,9 +55,11 @@ const rcaPriorityChoices = ["High", "Medium", "Low"] as const;
 const rcaTypeOfActionChoices = ["Correction", "Corrective Action", "Preventive Action"] as const;
 const typeOfActionChoices = ["Mitigation", "Contingency"] as const;
 
-function buildChoiceFieldSchema(name: string, displayName: string, choices: readonly string[]): string {
+function buildChoiceFieldSchema(name: string, displayName: string, choices: readonly string[], allowMultiple = false): string {
     const choicesXml = choices.map((choice) => `<CHOICE>${choice}</CHOICE>`).join("");
-    return `<Field Type='Choice' Name='${name}' StaticName='${name}' DisplayName='${displayName}' Format='Dropdown'><CHOICES>${choicesXml}</CHOICES></Field>`;
+    const fieldType = allowMultiple ? "MultiChoice" : "Choice";
+    const formatAttribute = allowMultiple ? "" : " Format='Dropdown'";
+    return `<Field Type='${fieldType}' Name='${name}' StaticName='${name}' DisplayName='${displayName}'${formatAttribute}><CHOICES>${choicesXml}</CHOICES></Field>`;
 }
 
 const fieldDefinitions: readonly FieldDefinition<RootCauseAnalysisFieldName>[] = [
@@ -103,7 +105,7 @@ const fieldDefinitions: readonly FieldDefinition<RootCauseAnalysisFieldName>[] =
     },
     {
         internalName: "RCATypeOfAction",
-        schemaXml: buildChoiceFieldSchema("RCATypeOfAction", "RCATypeOfAction", rcaTypeOfActionChoices as readonly string[])
+        schemaXml: buildChoiceFieldSchema("RCATypeOfAction", "RCATypeOfAction", rcaTypeOfActionChoices as readonly string[], true)
     },
     {
         internalName: "ActionPlanCorrective",
@@ -168,7 +170,7 @@ const fieldDefinitions: readonly FieldDefinition<RootCauseAnalysisFieldName>[] =
     },
     {
         internalName: "QuantitativeOrStatisticalEffecti",
-        schemaXml: `<Field Type='Note' Name='QuantitativeOrStatisticalEffecti' StaticName='QuantitativeOrStatisticalEffecti' DisplayName='QuantitativeOrStatisticalEffecti' NumLines='6' RichText='FALSE' />`
+        schemaXml: `<Field Type='Note' Name='QuantitativeOrStatisticalEffecti' StaticName='QuantitativeOrStatisticalEffecti' DisplayName='Quantitative Or Statistical Effectiveness' NumLines='6' RichText='FALSE' />`
     }
 ] as const;
 

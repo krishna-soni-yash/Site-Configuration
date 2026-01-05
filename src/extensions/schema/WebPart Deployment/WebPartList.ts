@@ -14,20 +14,24 @@ enum WebParts{
 }
 
 export const WebPartList: IWebPartEntry[] = [
+	{ id: WebParts.HomePageWebPart, pageName: 'Home', homePage: true },
+	{ id: WebParts.MetricsDashBoardWebPart, pageName: 'Home', homePage: true },
+
 	{ id: WebParts.HomePageWebPart, pageName: 'MoM-ActionItem', homePage: false },
 	{ id: WebParts.MOMWebPart, pageName: 'MoM-ActionItem', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Audit', homePage: false },
 	{ id: WebParts.AuditWebPart, pageName: 'Audit', homePage: false },
 
-	{ id: WebParts.HomePageWebPart, pageName: 'Home', homePage: true },
-	{ id: WebParts.MetricsDashBoardWebPart, pageName: 'Home', homePage: true },
-
 	{ id: WebParts.HomePageWebPart, pageName: 'RCA-And-Raid-Logs', homePage: false },
 	{ id: WebParts.RootCauseAnalysisWebPart, pageName: 'RCA-And-Raid-Logs', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'PPO', homePage: false },
-	{ id: WebParts.PPOWebPart, pageName: 'PPO', homePage: false }
+	{ id: WebParts.PPOWebPart, pageName: 'PPO', homePage: false },
+
+	{ id: WebParts.HomePageWebPart, pageName: 'AMS', homePage: false },
+
+	{ id: WebParts.HomePageWebPart, pageName: 'Estimations', homePage: false },
 ];
 
 export default WebPartList;

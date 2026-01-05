@@ -33,6 +33,7 @@ export const RequiredListsProvision = {
     AMSTicketEffortLog: "AMSTicketEffortLog",
     EmailErrorLogs: "EmailErrorLogs",
     QualityActivities: "QualityActivities",
+    SDLCParams: "SDLCParams",
 
     RootCauseAnalysis: "RootCauseAnalysis",
     CustomerSatisfactionIndex: "Customer Satisfaction Index",
@@ -75,6 +76,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionTestingDefects } = await import('./lists/TestingDefects');
     const { provisionManagementEffortLog } = await import('./lists/ManagementEffortLog');
     const { provisionFacilitationReport } = await import('./lists/FacilitationReport');
+    const { provisionSDLCParams } = await import('./lists/SDLCParams');
 
     provisionLlBpRc(sp);
     provisionProjectMetricLogs(sp);
@@ -104,4 +106,5 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionTestingDefects(sp);
     provisionManagementEffortLog(sp);
     provisionFacilitationReport(sp);
+    provisionSDLCParams(sp);
 }

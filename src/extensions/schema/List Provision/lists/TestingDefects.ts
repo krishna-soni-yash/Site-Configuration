@@ -20,7 +20,7 @@ type TestingDefectsFieldName =
 	| "Defect detected on"
 	| "Defect Detected by"
 	| "Defect Status"
-	| "Defect Category"
+	| "Defect Type"
 	| "Injected Phase"
 	| "Identified Phase"
 	| "Defect Classification"
@@ -63,8 +63,8 @@ const fieldDefinitions: readonly FieldDefinition<TestingDefectsFieldName>[] = [
 		schemaXml: `<Field Type='Choice' Name='Defect Status' StaticName='Defect Status' DisplayName='Defect Status' Format='Dropdown'><CHOICES><CHOICE>--Select--</CHOICE><CHOICE>New</CHOICE><CHOICE>Open</CHOICE><CHOICE>Resolved- Fixed</CHOICE><CHOICE>Resolved- Invalid</CHOICE><CHOICE>Resolved- Won&apos;t Fix</CHOICE><CHOICE>Resolved- Duplicate</CHOICE><CHOICE>Resolved- Moved</CHOICE><CHOICE>Retest</CHOICE><CHOICE>Reopen</CHOICE><CHOICE>On Hold</CHOICE><CHOICE>Deferred</CHOICE><CHOICE>Closed</CHOICE></CHOICES></Field>`
 	},
 	{
-		internalName: "Defect Category",
-		schemaXml: `<Field Type='Choice' Name='Defect Category' StaticName='Defect Category' DisplayName='Defect Type' Format='Dropdown'><CHOICES><CHOICE>--Select--</CHOICE><CHOICE>Requirement</CHOICE><CHOICE>Design</CHOICE><CHOICE>Function</CHOICE><CHOICE>Interface</CHOICE><CHOICE>Checking</CHOICE><CHOICE>Algorithm</CHOICE><CHOICE>Assignment</CHOICE><CHOICE>Timing/Serialization</CHOICE><CHOICE>Build</CHOICE><CHOICE>Documentation</CHOICE><CHOICE>Others</CHOICE></CHOICES></Field>`
+		internalName: "Defect Type",
+		schemaXml: `<Field Type='Choice' Name='Defect Type' StaticName='Defect Type' DisplayName='Defect Type' Format='Dropdown'><CHOICES><CHOICE>--Select--</CHOICE><CHOICE>Requirement</CHOICE><CHOICE>Design</CHOICE><CHOICE>Function</CHOICE><CHOICE>Interface</CHOICE><CHOICE>Checking</CHOICE><CHOICE>Algorithm</CHOICE><CHOICE>Assignment</CHOICE><CHOICE>Timing/Serialization</CHOICE><CHOICE>Build</CHOICE><CHOICE>Documentation</CHOICE><CHOICE>Others</CHOICE></CHOICES></Field>`
 	},
 	{
 		internalName: "Injected Phase",
@@ -113,7 +113,7 @@ const defaultViewFields: readonly TestingDefectsViewField[] = [
 	"Defect detected on",
 	"Defect Detected by",
 	"Defect Status",
-	"Defect Category",
+	"Defect Type",
 	"Injected Phase",
 	"Identified Phase",
 	"Defect Classification",

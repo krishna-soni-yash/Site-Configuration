@@ -32,9 +32,16 @@ type AMSTicketEffortLogViewField = AMSTicketEffortLogFieldName | "ID" | "Modifie
 const taskTypeChoices = ["Solution Analysis Effort", "Solution Effort", "Solution Review Effort", "Solution Rework Effort", "Solution Testing Effort", "Others"] as const;
 const taskStatusChoices = ["Open", "Closed", "On-hold", "In progress"] as const;
 
-function buildChoiceFieldSchema(name: string, displayName: string, choices: readonly string[]): string {
+function buildChoiceFieldSchema(
+    name: string,
+    displayName: string,
+    choices: readonly string[],
+    options?: { multi?: boolean }
+): string {
+    const type = options?.multi ? "MultiChoice" : "Choice";
+    const format = options?.multi ? "Checkboxes" : "Dropdown";
     const choicesXml = choices.map((c) => `<CHOICE>${c}</CHOICE>`).join("");
-    return `<Field Type='Choice' Name='${name}' StaticName='${name}' DisplayName='${displayName}' Format='Dropdown'><CHOICES>${choicesXml}</CHOICES></Field>`;
+    return `<Field Type='${type}' Name='${name}' StaticName='${name}' DisplayName='${displayName}' Format='${format}'><CHOICES>${choicesXml}</CHOICES></Field>`;
 }
 
 function normalizeListId(id: unknown): string {
@@ -80,7 +87,7 @@ function buildFieldDefinitions(ticketListId: string): FieldDefinition<AMSTicketE
         },
         {
             internalName: "TaskType",
-            schemaXml: buildChoiceFieldSchema("TaskType", "TaskType", taskTypeChoices as readonly string[])
+            schemaXml: buildChoiceFieldSchema("TaskType", "TaskType", taskTypeChoices as readonly string[], { multi: true })
         },
         {
             internalName: "TaskStatus",

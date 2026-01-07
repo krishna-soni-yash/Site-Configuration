@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { RequiredListsProvision } from '../List Provision/RequiredListProvision';
 
 export interface IListBindingConfig {

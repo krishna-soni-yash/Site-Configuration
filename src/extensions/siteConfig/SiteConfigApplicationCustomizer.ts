@@ -24,23 +24,11 @@ export default class SiteConfigApplicationCustomizer
     const sp = createPnpSpfx(this.context as any);
     const spAny = sp as any;
 
-    //--------------------Page Web Part Deployment--------------------//
     const webInfo: { IsRootWeb?: boolean; Title?: string; ServerRelativeUrl?: string; IsSubWeb?: boolean } = await spAny.web
       .select('IsRootWeb', 'IsSubWeb', 'Title', 'ServerRelativeUrl')();
 
     if (webInfo?.IsRootWeb || webInfo?.IsSubWeb === false) {
       return;
-    }
-
-    let message: string = this.properties.testMessage;
-    if (!message) {
-      message = '(No properties were provided.)';
-    }
-
-    try {
-      await deployWebParts(sp as any);
-    } catch (e) {
-      Log.error(LOG_SOURCE, e as any);
     }
 
     //---------------Required Lists Provisioning--------------------//
@@ -63,6 +51,18 @@ export default class SiteConfigApplicationCustomizer
       }
     } catch (err) {
       console.error('Error while provisioning required lists:', err);
+    }
+    
+    //--------------------Page Web Part Deployment--------------------//
+    let message: string = this.properties.testMessage;
+    if (!message) {
+      message = '(No properties were provided.)';
+    }
+
+    try {
+      await deployWebParts(sp as any);
+    } catch (e) {
+      Log.error(LOG_SOURCE, e as any);
     }
     
     return Promise.resolve();

@@ -15,7 +15,7 @@ import {
 } from "@pnp/sp/clientside-pages";
 import { CheckinType } from "@pnp/sp/files";
 
-import WebPartList from './WebPartList';
+import WebPartList, { IListBindingConfig, IWebPartEntry } from './WebPartList';
 
 const normalizeGuid = (value?: string): string => (value || '').replace(/[{}]/g, '').toLowerCase();
 
@@ -45,17 +45,20 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 		const shouldSetAsHome = createdNewPage && entry.homePage === true;
 
 		try {
-			const alreadyHasWebpart = hasWebpart(page, entry.id);
+			const componentDef = findWebpartDefinition(availableWebparts, entry);
+			if (!componentDef) {
+				console.warn(`Skipping webpart ${describeEntry(entry)}: definition not found.`);
+				continue;
+			}
+
+			const alreadyHasWebpart = hasWebpart(page, componentDef);
 			if (alreadyHasWebpart) {
 				continue;
 			}
 
-			const componentDef = findWebpartDefinition(availableWebparts, entry.id);
-			if (!componentDef) {
-				continue;
-			}
-
 			const webpartControl = ClientsideWebpart.fromComponentDef(componentDef);
+			await configureWebpart(sp, webpartControl, entry);
+
 			const targetColumn = ensureDefaultColumn(page);
 			targetColumn.addControl(webpartControl);
 
@@ -66,7 +69,7 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 				await setHomePage(sp, `SitePages/${pageFileName}`);
 			}
 		} catch (e) {
-			console.error(`Failed to add webpart ${entry.id} to page ${entry.pageName}:`, e);
+			console.error(`Failed to add webpart ${describeEntry(entry)} to page ${entry.pageName}:`, e);
 		}
 	}
 }
@@ -109,8 +112,12 @@ function ensureDefaultColumn(page: IClientsidePage) {
 	return section.columns[0] || section.addColumn(12);
 }
 
-function hasWebpart(page: IClientsidePage, componentId: string): boolean {
-	const targetId = normalizeGuid(componentId);
+function hasWebpart(page: IClientsidePage, componentDef: IClientsidePageComponent): boolean {
+	const targetIds = collectDefinitionIds(componentDef);
+	if (!targetIds.length) {
+		return false;
+	}
+
 	const matchingControl = page.findControl(control => {
 		const data: any = control.data || {};
 		const candidateIds = [
@@ -118,7 +125,7 @@ function hasWebpart(page: IClientsidePage, componentId: string): boolean {
 			normalizeGuid(data?.webPartData?.id),
 			normalizeGuid(data?.id),
 		].filter(Boolean);
-		return candidateIds.some(id => id === targetId);
+		return candidateIds.some(id => targetIds.includes(id));
 	});
 	return !!matchingControl;
 }
@@ -131,18 +138,230 @@ async function getWebpartDefinitions(sp: SPFI): Promise<IClientsidePageComponent
 	}
 }
 
-function findWebpartDefinition(defs: IClientsidePageComponent[], componentId: string): IClientsidePageComponent | undefined {
-	const targetId = normalizeGuid(componentId);
-	return defs.find(def => {
-		const candidateIds = [
-			normalizeGuid(def.Id as string),
-			normalizeGuid((def as any)?.Id?.toString?.()),
-			normalizeGuid((def as any)?.ComponentDefinition?.Id),
-			normalizeGuid((def as any)?.Manifest?.Id),
-			normalizeGuid((def as any)?.PreconfiguredEntries?.[0]?.webPartId),
-		].filter(Boolean);
-		return candidateIds.some(id => id === targetId);
-	});
+function findWebpartDefinition(defs: IClientsidePageComponent[], entry: IWebPartEntry): IClientsidePageComponent | undefined {
+	const desiredIds = [normalizeGuid(entry.id), normalizeGuid((entry as any)?.componentId)].filter(Boolean);
+	const desiredAliases = collectEntryAliases(entry);
+
+	for (const def of defs) {
+		const candidateIds = collectDefinitionIds(def);
+		if (desiredIds.length && candidateIds.some(id => desiredIds.includes(id))) {
+			return def;
+		}
+		if (desiredAliases.length) {
+			const aliases = collectDefinitionAliases(def);
+			if (aliases.some(alias => desiredAliases.includes(alias))) {
+				return def;
+			}
+		}
+	}
+
+	return undefined;
+}
+
+async function configureWebpart(sp: SPFI, webpartControl: ClientsideWebpart, entry: IWebPartEntry): Promise<void> {
+	if (entry.listBinding) {
+		const listConfig = await resolveListWebpartConfig(sp, entry.listBinding);
+		if (listConfig.webPartTitle) {
+			webpartControl.title = listConfig.webPartTitle;
+		}
+		if (listConfig.properties) {
+			webpartControl.setProperties(listConfig.properties);
+		}
+		if (listConfig.serverProcessedContent) {
+			webpartControl.setServerProcessedContent(listConfig.serverProcessedContent);
+		}
+	}
+}
+
+function collectDefinitionIds(def: IClientsidePageComponent): string[] {
+	const values = new Set<string>();
+	const push = (value?: string) => {
+		const normalized = normalizeGuid(value);
+		if (normalized) {
+			values.add(normalized);
+		}
+	};
+
+	push(def.Id as string);
+	const defAny: any = def;
+	push(defAny?.ComponentId);
+	push(defAny?.ComponentDefinition?.Id);
+
+	const manifest = parseManifest(defAny?.Manifest);
+	if (manifest) {
+		push(manifest?.id);
+		push(manifest?.Id);
+		const componentDefinition = manifest?.componentDefinition || manifest?.ComponentDefinition;
+		push(componentDefinition?.id);
+		push(componentDefinition?.Id);
+		const preconfigured = manifest?.preconfiguredEntries || manifest?.PreconfiguredEntries;
+		if (Array.isArray(preconfigured)) {
+			for (const pre of preconfigured) {
+				push(pre?.webPartId);
+				push(pre?.id);
+				push(pre?.Id);
+			}
+		}
+	}
+
+	return Array.from(values);
+}
+
+function collectDefinitionAliases(def: IClientsidePageComponent): string[] {
+	const aliases = new Set<string>();
+	const defAny: any = def;
+	const add = (value?: string) => {
+		if (typeof value === 'string') {
+			const trimmed = value.trim().toLowerCase();
+			if (trimmed) {
+				aliases.add(trimmed);
+			}
+		}
+	};
+
+	add(def.Name);
+	add(defAny?.ComponentName);
+	add(defAny?.ComponentAlias);
+
+	const manifest = parseManifest(defAny?.Manifest);
+	if (manifest) {
+		add(manifest?.alias);
+		add(manifest?.Alias);
+		add(manifest?.componentAlias);
+		add(manifest?.componentName);
+		const entries = manifest?.preconfiguredEntries || manifest?.PreconfiguredEntries;
+		if (Array.isArray(entries)) {
+			for (const entry of entries) {
+				add(toLowerValue(entry?.title));
+				add(toLowerValue(entry?.Title));
+				if (entry?.title && typeof entry.title === 'object') {
+					for (const value of Object.values(entry.title)) {
+						add(toLowerValue(`${value ?? ''}`));
+					}
+				}
+			}
+		}
+	}
+
+	return Array.from(aliases);
+}
+
+function collectEntryAliases(entry: IWebPartEntry): string[] {
+	const aliases = new Set<string>();
+	const add = (value?: string) => {
+		if (typeof value === 'string') {
+			const trimmed = value.trim().toLowerCase();
+			if (trimmed) {
+				aliases.add(trimmed);
+			}
+		}
+	};
+
+	add((entry as any)?.componentAlias);
+	add(entry.alias);
+
+	return Array.from(aliases);
+}
+
+function parseManifest(manifest: any): any | undefined {
+	if (!manifest) {
+		return undefined;
+	}
+	if (typeof manifest === 'string') {
+		try {
+			return JSON.parse(manifest);
+		} catch (error) {
+			console.warn('Unable to parse webpart manifest string.', error);
+			return undefined;
+		}
+	}
+	if (typeof manifest === 'object') {
+		return manifest;
+	}
+	return undefined;
+}
+
+function toLowerValue(value?: string): string | undefined {
+	if (typeof value !== 'string') {
+		return undefined;
+	}
+	const trimmed = value.trim();
+	return trimmed ? trimmed.toLowerCase() : undefined;
+}
+
+function describeEntry(entry: IWebPartEntry): string {
+	return entry.alias || entry.id || entry.pageName;
+}
+
+interface IListWebpartConfigResult {
+	properties: Record<string, any>;
+	serverProcessedContent?: Record<string, any>;
+	webPartTitle?: string;
+}
+
+async function resolveListWebpartConfig(sp: SPFI, binding: IListBindingConfig): Promise<IListWebpartConfigResult> {
+	const listSelector = binding.listId ? sp.web.lists.getById(stripGuid(binding.listId)) : sp.web.lists.getByTitle(binding.listTitle);
+	const listInfo: any = await listSelector.select('Id', 'Title', 'DefaultViewUrl', 'RootFolder/ServerRelativeUrl').expand('RootFolder')();
+	const listGuid = stripGuid(binding.listId || listInfo?.Id);
+	const listTitle = binding.listTitle || listInfo?.Title;
+	const listUrl = deriveListUrl(listInfo);
+
+	let viewGuid = stripGuid(binding.viewId);
+	let viewTitle = binding.viewTitle;
+	let viewUrl: string | undefined;
+
+	if (!viewGuid) {
+		if (binding.viewTitle) {
+			const viewInfo: any = await listSelector.views.getByTitle(binding.viewTitle).select('Id', 'Title', 'ServerRelativeUrl')();
+			viewGuid = stripGuid(viewInfo?.Id);
+			viewTitle = viewInfo?.Title || binding.viewTitle;
+			viewUrl = viewInfo?.ServerRelativeUrl;
+		} else {
+			const viewInfo: any = await listSelector.defaultView.select('Id', 'Title', 'ServerRelativeUrl')();
+			viewGuid = stripGuid(viewInfo?.Id);
+			viewTitle = viewInfo?.Title || viewTitle;
+			viewUrl = viewInfo?.ServerRelativeUrl;
+		}
+	}
+
+	const displayTitle = binding.webPartTitle || viewTitle || listTitle;
+
+	const properties: Record<string, any> = {
+		isDocumentLibrary: false,
+		listId: listGuid,
+		listTitle,
+		listUrl,
+		selectedListId: listGuid,
+		selectedListTitle: listTitle,
+		selectedListUrl: listUrl,
+		selectedViewId: viewGuid,
+		selectedViewTitle: viewTitle,
+		selectedViewUrl: viewUrl,
+	};
+
+	return {
+		properties,
+		serverProcessedContent: {
+			searchablePlainTexts: {
+				title: displayTitle || '',
+			},
+		},
+		webPartTitle: displayTitle,
+	};
+}
+
+function stripGuid(value?: string): string {
+	const raw = `${value ?? ''}`.trim();
+	return raw ? raw.replace(/[{}]/g, '').toLowerCase() : '';
+}
+
+function deriveListUrl(listInfo: any): string {
+	const rootFolderUrl = listInfo?.RootFolder?.ServerRelativeUrl;
+	if (typeof rootFolderUrl === 'string' && rootFolderUrl.trim()) {
+		return rootFolderUrl;
+	}
+	const defaultViewUrl = `${listInfo?.DefaultViewUrl ?? ''}`;
+	return defaultViewUrl.replace(/\/Forms\/.+$/i, '');
 }
 
 async function finalizePage(sp: SPFI, pageServerRelativeUrl: string): Promise<void> {

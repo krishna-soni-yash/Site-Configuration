@@ -7,8 +7,7 @@ import {
 import * as strings from 'SiteConfigApplicationCustomizerStrings';
 import { createPnpSpfx } from './Initialization';
 import deployWebParts from '../schema/WebPart Deployment/Deployment';
-import { provisionRequiredLists, RequiredListsProvision } from '../schema/List Provision/RequiredListProvision';
-import fetchListId from '../schema/List Provision/fetchListId';
+import { provisionRequiredLists } from '../schema/List Provision/RequiredListProvision';
 
 const LOG_SOURCE: string = 'SiteConfigApplicationCustomizer';
 
@@ -24,6 +23,13 @@ export default class SiteConfigApplicationCustomizer
 
     const sp = createPnpSpfx(this.context as any);
     const spAny = sp as any;
+
+    const webInfo: { IsRootWeb?: boolean; Title?: string; ServerRelativeUrl?: string; IsSubWeb?: boolean } = await spAny.web
+      .select('IsRootWeb', 'IsSubWeb', 'Title', 'ServerRelativeUrl')();
+
+    if (webInfo?.IsRootWeb || webInfo?.IsSubWeb === false) {
+      return;
+    }
 
     //---------------Required Lists Provisioning--------------------//
     try {
@@ -47,20 +53,7 @@ export default class SiteConfigApplicationCustomizer
       console.error('Error while provisioning required lists:', err);
     }
     
-    //--------------------Fetch Lists Ids-----------------------------//
-    let codeReviewDefectsListId: string | undefined;
-    codeReviewDefectsListId = await fetchListId(sp, RequiredListsProvision.CodeReviewDefects);
-    console.log('Resolved CodeReviewDefects list Id:', codeReviewDefectsListId);
-    
-
     //--------------------Page Web Part Deployment--------------------//
-    const webInfo: { IsRootWeb?: boolean; Title?: string; ServerRelativeUrl?: string; IsSubWeb?: boolean } = await spAny.web
-      .select('IsRootWeb', 'IsSubWeb', 'Title', 'ServerRelativeUrl')();
-
-    if (webInfo?.IsRootWeb || webInfo?.IsSubWeb === false) {
-      return;
-    }
-
     let message: string = this.properties.testMessage;
     if (!message) {
       message = '(No properties were provided.)';

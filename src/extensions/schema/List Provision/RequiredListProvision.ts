@@ -39,7 +39,7 @@ export const RequiredListsProvision = {
     CustomerSatisfactionIndex: "Customer Satisfaction Index",
     WorkLogManagement: "WorkLogManagement",
     TaskManagement: "TaskManagement",
-    CodeReviewDefects: "CodeReviewDefects",
+    CodeReviewDefects: "Code Review Defects",
     TestingDefects: "Testing Defects",
     ReviewDefects: "Review Defects"
 };

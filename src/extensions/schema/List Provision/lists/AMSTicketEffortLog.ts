@@ -82,7 +82,7 @@ function buildFieldDefinitions(ticketListId: string): FieldDefinition<AMSTicketE
         },
         {
             internalName: "TaskType",
-            schemaXml: buildChoiceFieldSchema("TaskType", "TaskType", taskTypeChoices as readonly string[], { multi: true })
+            schemaXml: buildChoiceFieldSchema("TaskType", "TaskType", taskTypeChoices as readonly string[], true)
         },
         {
             internalName: "TaskStatus",

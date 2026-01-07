@@ -38,6 +38,16 @@ export const WebPartList: IWebPartEntry[] = [
 		},
 	},
 
+	{ id: WebParts.HomePageWebPart, pageName: 'Review-Defects', homePage: false },
+	{
+		alias: 'ListWebPart',
+		pageName: 'Review-Defects',
+		listBinding: {
+			listTitle: RequiredListsProvision.ReviewDefects,
+			webPartTitle: 'Review-Defects'
+		},
+	},
+
 	{ id: WebParts.HomePageWebPart, pageName: 'Testing-Defects', homePage: false },
 	{
 		alias: 'ListWebPart',

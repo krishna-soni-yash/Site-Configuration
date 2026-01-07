@@ -3,6 +3,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/fields";
 import "@pnp/sp/views";
+import "@pnp/sp/items";
 import {
 	ensureListProvision,
 	FieldDefinition,
@@ -55,6 +56,45 @@ const definition: ListProvisionDefinition<AMSMTTRFieldName, AMSMTTRViewField> = 
 	defaultViewFields
 };
 
+type SeedItem = {
+	Title: string;
+	responseTimeMin: number;
+	responseTimeMax: number;
+	resolutionTimeMin: number;
+	resolutionTimeMax: number;
+};
+
+const seedItems: readonly SeedItem[] = [
+	{
+		Title: "P1",
+		responseTimeMin: 0.05,
+		responseTimeMax: 0.5,
+		resolutionTimeMin: 0.5,
+		resolutionTimeMax: 6
+	},
+	{
+		Title: "P2",
+		responseTimeMin: 0.05,
+		responseTimeMax: 1,
+		resolutionTimeMin: 0.5,
+		resolutionTimeMax: 12
+	},
+	{
+		Title: "P3",
+		responseTimeMin: 0.05,
+		responseTimeMax: 5,
+		resolutionTimeMin: 0.5,
+		resolutionTimeMax: 37
+	},
+	{
+		Title: "P4",
+		responseTimeMin: 0.05,
+		responseTimeMax: 7,
+		resolutionTimeMin: 0.5,
+		resolutionTimeMax: 68
+	},
+];
+
 async function ensureTitleRenamed(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
 	try {
@@ -67,9 +107,91 @@ async function ensureTitleRenamed(sp: SPFI): Promise<void> {
 	}
 }
 
+function toNumber(value: unknown): number {
+	if (typeof value === "number") {
+		return value;
+	}
+	const parsed = Number(`${value ?? ""}`);
+	return Number.isFinite(parsed) ? parsed : 0;
+}
+
+async function ensureSeedData(sp: SPFI): Promise<void> {
+	const list = sp.web.lists.getByTitle(LIST_TITLE);
+	const existingItems = await list.items.select(
+		"Id",
+		"Title",
+		"responseTimeMin",
+		"responseTimeMax",
+		"resolutionTimeMin",
+		"resolutionTimeMax"
+	)();
+
+	const existingMap = new Map<
+		string,
+		{
+			id: number;
+			responseTimeMin: number;
+			responseTimeMax: number;
+			resolutionTimeMin: number;
+			resolutionTimeMax: number;
+		}
+	>();
+
+	for (const item of existingItems) {
+		const title = `${item.Title ?? ""}`;
+		if (!title) {
+			continue;
+		}
+		existingMap.set(title, {
+			id: Number(item.Id),
+			responseTimeMin: toNumber(item.responseTimeMin),
+			responseTimeMax: toNumber(item.responseTimeMax),
+			resolutionTimeMin: toNumber(item.resolutionTimeMin),
+			resolutionTimeMax: toNumber(item.resolutionTimeMax)
+		});
+	}
+
+	const numericFields: Array<keyof Omit<SeedItem, "Title">> = [
+		"responseTimeMin",
+		"responseTimeMax",
+		"resolutionTimeMin",
+		"resolutionTimeMax"
+	];
+
+	for (const seed of seedItems) {
+		const payload = {
+			Title: seed.Title,
+			responseTimeMin: seed.responseTimeMin,
+			responseTimeMax: seed.responseTimeMax,
+			resolutionTimeMin: seed.resolutionTimeMin,
+			resolutionTimeMax: seed.resolutionTimeMax
+		};
+
+		const existing = existingMap.get(seed.Title);
+		if (!existing) {
+			await list.items.add(payload);
+			continue;
+		}
+
+		const updates: Partial<typeof payload> = {};
+		for (const field of numericFields) {
+			const target = seed[field];
+			const current = existing[field];
+			if (Math.abs(current - target) > 0.0001) {
+				updates[field] = target;
+			}
+		}
+
+		if (Object.keys(updates).length > 0) {
+			await list.items.getById(existing.id).update(updates);
+		}
+	}
+}
+
 export async function provisionAMSMTTR(sp: SPFI): Promise<void> {
 	await ensureListProvision(sp, definition);
 	await ensureTitleRenamed(sp);
+	await ensureSeedData(sp);
 }
 
 export default provisionAMSMTTR;

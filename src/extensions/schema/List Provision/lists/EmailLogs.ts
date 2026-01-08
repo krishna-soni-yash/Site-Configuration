@@ -39,9 +39,7 @@ const defaultViewFields: readonly EmailLogsViewField[] = [
     "Status",
     "MailSentTo",
     "VersionId",
-    "MailSentStatus",
-    "Author",
-    "Created"
+    "MailSentStatus"
 ] as const;
 
 const removeExistingFields: readonly EmailLogsFieldName[] = [];

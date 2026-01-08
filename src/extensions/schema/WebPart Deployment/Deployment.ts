@@ -301,10 +301,19 @@ interface IListWebpartConfigResult {
 
 async function resolveListWebpartConfig(sp: SPFI, binding: IListBindingConfig): Promise<IListWebpartConfigResult> {
 	const listSelector = binding.listId ? sp.web.lists.getById(stripGuid(binding.listId)) : sp.web.lists.getByTitle(binding.listTitle);
-	const listInfo: any = await listSelector.select('Id', 'Title', 'DefaultViewUrl', 'RootFolder/ServerRelativeUrl').expand('RootFolder')();
+	const listInfo: any = await listSelector
+		.select('Id', 'Title', 'DefaultViewUrl', 'RootFolder/ServerRelativeUrl', 'BaseTemplate')
+		.expand('RootFolder')();
 	const listGuid = stripGuid(binding.listId || listInfo?.Id);
 	const listTitle = binding.listTitle || listInfo?.Title;
 	const listUrl = deriveListUrl(listInfo);
+	const baseTemplateRaw = listInfo?.BaseTemplate;
+	const baseTemplate = typeof baseTemplateRaw === 'number'
+		? baseTemplateRaw
+		: parseInt(`${baseTemplateRaw ?? ''}`, 10);
+	const isDocumentLibrary = binding.isDocumentLibrary !== undefined
+		? binding.isDocumentLibrary
+		: baseTemplate === 101;
 
 	let viewGuid = stripGuid(binding.viewId);
 	let viewTitle = binding.viewTitle;
@@ -327,7 +336,7 @@ async function resolveListWebpartConfig(sp: SPFI, binding: IListBindingConfig): 
 	const displayTitle = binding.webPartTitle || viewTitle || listTitle;
 
 	const properties: Record<string, any> = {
-		isDocumentLibrary: false,
+		isDocumentLibrary,
 		listId: listGuid,
 		listTitle,
 		listUrl,

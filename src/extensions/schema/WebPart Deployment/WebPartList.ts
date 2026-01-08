@@ -1,5 +1,6 @@
 /*eslint-disable*/
 import { RequiredListsProvision } from '../List Provision/RequiredListProvision';
+import { ProjectDocumentsLibraryName } from '../Library Provsion/libraries/ProjectDocuments';
 
 export interface IListBindingConfig {
 	listTitle: string;
@@ -7,6 +8,7 @@ export interface IListBindingConfig {
 	viewTitle?: string;
 	viewId?: string;
 	webPartTitle?: string;
+	isDocumentLibrary?: boolean;
 }
 
 export interface IWebPartEntry {
@@ -56,6 +58,17 @@ export const WebPartList: IWebPartEntry[] = [
 		listBinding: {
 			listTitle: RequiredListsProvision.TestingDefects,
 			webPartTitle: 'Testing-Defects'
+		},
+	},
+
+	{ id: WebParts.HomePageWebPart, pageName: 'Documents', homePage: false },
+	{
+		alias: 'ListWebPart',
+		pageName: 'Documents',
+		listBinding: {
+			listTitle: ProjectDocumentsLibraryName,
+			webPartTitle: 'Project Documents',
+			isDocumentLibrary: true
 		},
 	},
 	

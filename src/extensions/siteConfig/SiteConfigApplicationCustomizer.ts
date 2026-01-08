@@ -1,17 +1,17 @@
 /*eslint-disable*/
-//import { Log } from '@microsoft/sp-core-library';
+import { Log } from '@microsoft/sp-core-library';
 import {
   BaseApplicationCustomizer
 } from '@microsoft/sp-application-base';
 import { createPnpSpfx } from './Initialization';
-//import deployWebParts from '../schema/WebPart Deployment/Deployment';
+import deployWebParts from '../schema/WebPart Deployment/Deployment';
 //import { provisionRequiredLists } from '../schema/List Provision/RequiredListProvision';
 import {
   ProjectDocumentsLibraryName,
   provisionProjectDocumentsLibrary
 } from '../schema/Library Provsion/libraries/ProjectDocuments';
 
-//const LOG_SOURCE: string = 'SiteConfigApplicationCustomizer';
+const LOG_SOURCE: string = 'SiteConfigApplicationCustomizer';
 
 export interface ISiteConfigApplicationCustomizerProperties {
   testMessage: string;
@@ -53,16 +53,16 @@ export default class SiteConfigApplicationCustomizer
       // }
 
       //--------------------Page Web Part Deployment--------------------//
-      // let message: string = this.properties.testMessage;
-      // if (!message) {
-      //   message = '(No properties were provided.)';
-      // }
+      let message: string = this.properties.testMessage;
+      if (!message) {
+        message = '(No properties were provided.)';
+      }
 
-      // try {
-      //   await deployWebParts(sp as any);
-      // } catch (e) {
-      //   Log.error(LOG_SOURCE, e as any);
-      // }
+      try {
+        await deployWebParts(sp as any);
+      } catch (e) {
+        Log.error(LOG_SOURCE, e as any);
+      }
 
       //--------------------Provision Document Libraries--------------------//
       try {

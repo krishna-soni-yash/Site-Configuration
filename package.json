@@ -20,7 +20,12 @@
     "@pnp/common": "^2.15.0",
     "@pnp/logging": "^4.17.0",
     "@pnp/odata": "^2.15.0",
-    "@pnp/sp": "^4.17.0"
+    "@pnp/sp": "^4.17.0",
+    "@microsoft/sp-component-base": "1.21.1",
+    "@microsoft/sp-property-pane": "1.21.1",
+    "@microsoft/sp-webpart-base": "1.21.1",
+    "@microsoft/sp-lodash-subset": "1.21.1",
+    "@microsoft/sp-office-ui-fabric-core": "1.21.1"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-5.3": "0.1.0",
@@ -33,6 +38,7 @@
     "eslint": "8.57.1",
     "gulp": "4.0.2",
     "typescript": "~5.3.3",
-    "@microsoft/sp-module-interfaces": "1.21.1"
+    "@microsoft/sp-module-interfaces": "1.21.1",
+    "@fluentui/react": "^8.106.4"
   }
 }

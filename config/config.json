@@ -9,10 +9,19 @@
           "manifest": "./src/extensions/siteConfig/SiteConfigApplicationCustomizer.manifest.json"
         }
       ]
+    },
+    "hide-banner-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/hideBanner/HideBannerWebPart.js",
+          "manifest": "./src/webparts/hideBanner/HideBannerWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
-    "SiteConfigApplicationCustomizerStrings": "lib/extensions/siteConfig/loc/{locale}.js"
+    "SiteConfigApplicationCustomizerStrings": "lib/extensions/siteConfig/loc/{locale}.js",
+    "HideBannerWebPartStrings": "lib/webparts/hideBanner/loc/{locale}.js"
   }
 }

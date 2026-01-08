@@ -27,11 +27,13 @@ enum WebParts{
 	RootCauseAnalysisWebPart = 'b77d3069-e9d7-4521-a93c-a7ec0b2dfa50',
 	PPOWebPart = 'aec7bd2e-5d17-4a98-89c0-ddb541197235',
 	AMSWebpart = 'bc0d2a5f-1168-4a7b-b218-6b39bffd9e11',
-	EstimationsWebPart = '1e0bf94d-fcd7-4556-97ac-a334deb8ff36'
+	EstimationsWebPart = '1e0bf94d-fcd7-4556-97ac-a334deb8ff36',
+	HideBannerWebPart = '137d8eae-8e43-42fd-ad03-52842b02daeb'
 }
 
 export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.HomePageWebPart, pageName: 'Code-Review-Defects', homePage: false },
+	{ id: WebParts.HideBannerWebPart, pageName: 'Code-Review-Defects', homePage: false },
 	{
 		alias: 'ListWebPart',
 		pageName: 'Code-Review-Defects',
@@ -42,6 +44,7 @@ export const WebPartList: IWebPartEntry[] = [
 	},
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Review-Defects', homePage: false },
+	{ id: WebParts.HideBannerWebPart, pageName: 'Review-Defects', homePage: false },
 	{
 		alias: 'ListWebPart',
 		pageName: 'Review-Defects',
@@ -52,6 +55,7 @@ export const WebPartList: IWebPartEntry[] = [
 	},
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Testing-Defects', homePage: false },
+	{ id: WebParts.HideBannerWebPart, pageName: 'Testing-Defects', homePage: false },
 	{
 		alias: 'ListWebPart',
 		pageName: 'Testing-Defects',
@@ -62,6 +66,7 @@ export const WebPartList: IWebPartEntry[] = [
 	},
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Documents', homePage: false },
+	{ id: WebParts.HideBannerWebPart, pageName: 'Documents', homePage: false },
 	{
 		alias: 'ListWebPart',
 		pageName: 'Documents',

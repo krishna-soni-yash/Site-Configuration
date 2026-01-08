@@ -3,8 +3,6 @@ import { Log } from '@microsoft/sp-core-library';
 import {
   BaseApplicationCustomizer
 } from '@microsoft/sp-application-base';
-
-import * as strings from 'SiteConfigApplicationCustomizerStrings';
 import { createPnpSpfx } from './Initialization';
 import deployWebParts from '../schema/WebPart Deployment/Deployment';
 import { provisionRequiredLists } from '../schema/List Provision/RequiredListProvision';
@@ -19,52 +17,50 @@ export default class SiteConfigApplicationCustomizer
   extends BaseApplicationCustomizer<ISiteConfigApplicationCustomizerProperties> {
 
   public async onInit(): Promise<void> {
-    Log.info(LOG_SOURCE, `Initialized ${strings.Title}`);
 
     const sp = createPnpSpfx(this.context as any);
-    const spAny = sp as any;
 
-    const webInfo: { IsRootWeb?: boolean; Title?: string; ServerRelativeUrl?: string; IsSubWeb?: boolean } = await spAny.web
-      .select('IsRootWeb', 'IsSubWeb', 'Title', 'ServerRelativeUrl')();
+    const PARENT_SITE_NAME = "SMARTIQ Plus";
+    //to check current site name
+    const currentSiteName = this.context.pageContext.web.title;
+    
+    if (currentSiteName !== PARENT_SITE_NAME) {
+      
+      //---------------Required Lists Provisioning--------------------//
+      try {
+        const siteUrl = this.context.pageContext?.web?.absoluteUrl || 'unknown-site';
+        const storageKey = `requiredListsProvisioned:${siteUrl}`;
+        const storageAvailable = typeof window !== 'undefined' && !!window.sessionStorage;
 
-    if (webInfo?.IsRootWeb || webInfo?.IsSubWeb === false) {
-      return;
-    }
+        const alreadyProvisioned = storageAvailable ? window.sessionStorage.getItem(storageKey) : null;
 
-    //---------------Required Lists Provisioning--------------------//
-    try {
-      const siteUrl = this.context.pageContext?.web?.absoluteUrl || 'unknown-site';
-      const storageKey = `requiredListsProvisioned:${siteUrl}`;
-      const storageAvailable = typeof window !== 'undefined' && !!window.sessionStorage;
-
-      const alreadyProvisioned = storageAvailable ? window.sessionStorage.getItem(storageKey) : null;
-
-      if (!alreadyProvisioned) {
-        await provisionRequiredLists(sp);
-        if (storageAvailable) {
-          try {
-            window.sessionStorage.setItem(storageKey, new Date().toISOString());
-          } catch (e) {
-            console.warn('Could not write provisioning flag to sessionStorage', e);
+        if (!alreadyProvisioned) {
+          await provisionRequiredLists(sp);
+          if (storageAvailable) {
+            try {
+              window.sessionStorage.setItem(storageKey, new Date().toISOString());
+            } catch (e) {
+              console.warn('Could not write provisioning flag to sessionStorage', e);
+            }
           }
         }
+      } catch (err) {
+        console.error('Error while provisioning required lists:', err);
       }
-    } catch (err) {
-      console.error('Error while provisioning required lists:', err);
-    }
-    
-    //--------------------Page Web Part Deployment--------------------//
-    let message: string = this.properties.testMessage;
-    if (!message) {
-      message = '(No properties were provided.)';
+
+      //--------------------Page Web Part Deployment--------------------//
+      let message: string = this.properties.testMessage;
+      if (!message) {
+        message = '(No properties were provided.)';
+      }
+
+      try {
+        await deployWebParts(sp as any);
+      } catch (e) {
+        Log.error(LOG_SOURCE, e as any);
+      }
     }
 
-    try {
-      await deployWebParts(sp as any);
-    } catch (e) {
-      Log.error(LOG_SOURCE, e as any);
-    }
-    
     return Promise.resolve();
   }
 }

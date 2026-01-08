@@ -17,7 +17,7 @@ export interface IWebPartEntry {
 	listBinding?: IListBindingConfig;
 }
 
- enum WebParts{
+enum WebParts{
  	HomePageWebPart = 'c2bf64bf-1b62-4aaf-9064-5b0793ce1829',
 	MOMWebPart = '28449fdc-6c05-47a1-b58e-53d9911420a2',
 	AuditWebPart = 'b244e89f-48d8-4cd7-b447-c9c5b4ccafa9',
@@ -26,7 +26,7 @@ export interface IWebPartEntry {
 	PPOWebPart = 'aec7bd2e-5d17-4a98-89c0-ddb541197235',
 	AMSWebpart = 'bc0d2a5f-1168-4a7b-b218-6b39bffd9e11',
 	EstimationsWebPart = '1e0bf94d-fcd7-4556-97ac-a334deb8ff36'
- }
+}
 
 export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.HomePageWebPart, pageName: 'Code-Review-Defects', homePage: false },
@@ -65,8 +65,8 @@ export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.HomePageWebPart, pageName: 'MoM-ActionItem', homePage: false },
 	{ id: WebParts.MOMWebPart, pageName: 'MoM-ActionItem', homePage: false },
 
-	{ id: WebParts.HomePageWebPart, pageName: 'Audit', homePage: false },
-	{ id: WebParts.AuditWebPart, pageName: 'Audit', homePage: false },
+	 { id: WebParts.HomePageWebPart, pageName: 'Audit', homePage: false },
+	 { id: WebParts.AuditWebPart, pageName: 'Audit', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'RCA-And-Raid-Logs', homePage: false },
 	{ id: WebParts.RootCauseAnalysisWebPart, pageName: 'RCA-And-Raid-Logs', homePage: false },

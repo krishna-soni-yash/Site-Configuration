@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { SPFI } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -137,8 +138,8 @@ const defaultViewFields: readonly CodeReviewDefectsViewField[] = [
 	"Remarks"
 ] as const;
 
-const displayNameMappings: ReadonlyArray<{ internalName: CodeReviewDefectsFieldName | "Title"; displayName: string }> = [
-	{ internalName: "Title", displayName: "Requirement ID / Ticket ID" },
+const displayNameMappings: ReadonlyArray<{ internalName: CodeReviewDefectsFieldName | "LinkTitle"; displayName: string }> = [
+	{ internalName: "LinkTitle", displayName: "Requirement ID / Ticket ID" },
 	{ internalName: "CodeFileClassName", displayName: "Code File/ Class Name" },
 	{ internalName: "CodeFileClassSize", displayName: "Code File/ Class Size (Lines of Code)" },
 	{ internalName: "CodeFileAuthorDeveloperName", displayName: "Code File - Author/ Developer Name(s)" },

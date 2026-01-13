@@ -19,6 +19,12 @@
     display: none !important;
   }
 }
+div[data-automation-id='listViewWebPartSeeAll'] {
+    display: none !important;
+  }
+#listViewWebPartSeeAll {
+    display: none !important;
+  }
 
 .hideBanner {
   overflow: hidden;

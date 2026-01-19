@@ -26,6 +26,7 @@ export interface ListProvisionDefinition<TFieldName extends string, TViewField e
     description?: string;
     templateId?: number;
     fields?: readonly FieldDefinition<TFieldName>[];
+    indexedFields?: readonly (TFieldName | string)[];
     defaultViewFields?: readonly TViewField[];
     /** Optional list of field internal names to remove from the list if they exist */
     removeFields?: readonly TFieldName[];
@@ -63,6 +64,7 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         description = "",
         templateId = 100,
         fields = [],
+        indexedFields = [],
         defaultViewFields = [],
         removeFields = [],
         views = []
@@ -96,6 +98,10 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         }
     }
 
+    if (indexedFields.length > 0) {
+        await ensureIndexedFields(list, title, indexedFields);
+    }
+
     if (defaultViewFields.length > 0) {
         const defaultView = list.defaultView;
         const schemaXml = await defaultView.fields.getSchemaXml();
@@ -109,6 +115,32 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
     if (views.length > 0) {
         for (const view of views) {
             await addViewToList(sp, title, view as ViewDefinition<string>);
+        }
+    }
+}
+
+async function ensureIndexedFields(list: any, listTitle: string, fieldNames: readonly string[]): Promise<void> {
+    const processed = new Set<string>();
+    for (const rawName of fieldNames) {
+        const fieldName = `${rawName ?? ""}`.trim();
+        if (!fieldName) {
+            continue;
+        }
+
+        const dedupeKey = fieldName.toLowerCase();
+        if (processed.has(dedupeKey)) {
+            continue;
+        }
+        processed.add(dedupeKey);
+
+        try {
+            const field = list.fields.getByInternalNameOrTitle(fieldName);
+            const info = await field.select("Indexed")();
+            if (!info?.Indexed) {
+                await field.update({ Indexed: true });
+            }
+        } catch (error) {
+            console.warn(`Failed to index field ${fieldName} on list ${listTitle}:`, error);
         }
     }
 }

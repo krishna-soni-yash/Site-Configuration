@@ -13,9 +13,9 @@ import { RequiredListsProvision } from "../RequiredListProvision";
 const LIST_TITLE = RequiredListsProvision.TestingDefects;
 
 type TestingDefectsFieldName =
-	| "Defect ID"
 	| "Test Scenario ID"
 	| "Test Case ID"
+	| "Defect ID"
 	| "Defect Description"
 	| "Review method"
 	| "Defect detected on"
@@ -36,16 +36,16 @@ type TestingDefectsViewField = TestingDefectsFieldName | "LinkTitle";
 
 const fieldDefinitions: readonly FieldDefinition<TestingDefectsFieldName>[] = [
 	{
-		internalName: "Defect ID",
-		schemaXml: `<Field Type='Text' Name='Defect ID' StaticName='Defect ID' DisplayName='Defect ID' MaxLength='255' />`
-	},
-	{
 		internalName: "Test Scenario ID",
 		schemaXml: `<Field Type='Text' Name='Test Scenario ID' StaticName='Test Scenario ID' DisplayName='Test Scenario ID' MaxLength='255' />`
 	},
 	{
 		internalName: "Test Case ID",
 		schemaXml: `<Field Type='Text' Name='Test Case ID' StaticName='Test Case ID' DisplayName='Test Case ID' MaxLength='255' />`
+	},
+	{
+		internalName: "Defect ID",
+		schemaXml: `<Field Type='Text' Name='Defect ID' StaticName='Defect ID' DisplayName='Defect ID' MaxLength='255' />`
 	},
 	{
 		internalName: "Defect Description",
@@ -111,9 +111,9 @@ const fieldDefinitions: readonly FieldDefinition<TestingDefectsFieldName>[] = [
 
 const defaultViewFields: readonly TestingDefectsViewField[] = [
 	"LinkTitle",
-	"Defect ID",
 	"Test Scenario ID",
 	"Test Case ID",
+	"Defect ID",
 	"Defect Description",
 	"Review method",
 	"Defect detected on",

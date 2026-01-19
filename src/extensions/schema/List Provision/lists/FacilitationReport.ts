@@ -142,6 +142,7 @@ export async function provisionFacilitationReport(sp: SPFI): Promise<void> {
 		description: "Facilitation report list",
 		templateId: 100,
 		fields,
+		indexedFields: ["Status", "Assigned"],
 		defaultViewFields,
 		removeFields: removeExistingFields
 	};

@@ -95,6 +95,7 @@ const definition: ListProvisionDefinition<ManagementTaskLogFieldName, Management
     description: "Management task log list",
     templateId: 100,
     fields: fieldDefinitions,
+    indexedFields: ["TaskStatus"],
     defaultViewFields,
     removeFields: removeExistingFields
 };

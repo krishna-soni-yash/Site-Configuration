@@ -101,6 +101,7 @@ const definition: ListProvisionDefinition<MinutesOfMeetingFieldName, MinutesOfMe
 	description: "Minutes of meeting list",
 	templateId: 100,
 	fields: fieldDefinitions,
+	indexedFields: ["MeetingName"],
 	defaultViewFields,
 	views: viewDefinitions
 };

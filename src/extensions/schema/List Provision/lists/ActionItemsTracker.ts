@@ -38,7 +38,7 @@ function buildFieldDefinitions(minutesListId: string): FieldDefinition<ActionIte
 		},
 		{
 			internalName: "ActionItem",
-			schemaXml: `<Field Type='Note' Name='ActionItem' StaticName='ActionItem' DisplayName='ActionItem' NumLines='6' RichText='FALSE' />`
+			schemaXml: `<Field Type='Text' Name='ActionItem' StaticName='ActionItem' DisplayName='ActionItem' MaxLength='255' />`
 		},
 		{
 			internalName: "Responsibility",
@@ -117,6 +117,7 @@ export async function provisionActionItemsTracker(sp: SPFI): Promise<void> {
 		description: "Action items tracker list",
 		templateId: 100,
 		fields,
+		indexedFields: ["Status", "ActionItem"],
 		defaultViewFields,
 		views: viewDefinitions
 	};

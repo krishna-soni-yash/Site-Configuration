@@ -212,6 +212,7 @@ export async function provisionReviewDefects(sp: SPFI): Promise<void> {
 		description: "Review defects log",
 		templateId: 100,
 		fields,
+		indexedFields: ["Artifact Name", "Version No", "Type of Review", "Category", "Severity", "Status"],
 		defaultViewFields
 	};
 

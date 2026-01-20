@@ -81,6 +81,7 @@ const definition: ListProvisionDefinition<AMSTicketLogFieldName, AMSTicketLogVie
     description: "AMS ticket log",
     templateId: 100,
     fields: fieldDefinitions,
+    indexedFields: ["TicketID","Status"],
     defaultViewFields
 };
 

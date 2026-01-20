@@ -182,6 +182,7 @@ export async function provisionTaskManagement(sp: SPFI): Promise<void> {
         description: "Task management list",
         templateId: 100,
         fields,
+        indexedFields: ["WorkItemNo", "TaskStatus"],
         defaultViewFields
     };
 

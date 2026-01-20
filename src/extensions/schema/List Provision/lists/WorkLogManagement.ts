@@ -96,6 +96,7 @@ const definition: ListProvisionDefinition<WorkLogFieldName, WorkLogViewField> = 
     description: "Work log management",
     templateId: 100,
     fields: fieldDefinitions,
+    indexedFields: ["WorkItemNo", "Status"],
     defaultViewFields
 };
 

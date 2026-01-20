@@ -130,6 +130,7 @@ export async function provisionAMSTicketEffortLog(sp: SPFI): Promise<void> {
         description: "AMS ticket effort log",
         templateId: 100,
         fields,
+        indexedFields: ["TicketID"],
         defaultViewFields
     };
 

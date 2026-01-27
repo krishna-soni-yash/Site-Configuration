@@ -16,8 +16,8 @@ const LIST_TITLE = RequiredListsProvision.AMSTicketEffortLog;
 
 type AMSTicketEffortLogFieldName =
     | "TicketID"
-    | "TicketID_Title"
-    | "TicketID_TicketDescription"
+    // | "TicketID_Title"
+    // | "TicketID_TicketDescription"
     | "AssignedTo"
     | "UniqueEffortID"
     | "TaskType"
@@ -64,14 +64,14 @@ function buildFieldDefinitions(ticketListId: string): FieldDefinition<AMSTicketE
             internalName: "TicketID",
             schemaXml: `<Field Type='Lookup' Name='TicketID' StaticName='TicketID' DisplayName='TicketID' List='${ticketListId}' ShowField='ID' LookupId='TRUE' />`
         },
-        {
-            internalName: "TicketID_Title",
-            schemaXml: `<Field Type='Lookup' Name='TicketID_Title' StaticName='TicketID_Title' DisplayName='TicketTitle' List='${ticketListId}' ShowField='Title' />`
-        },
-        {
-            internalName: "TicketID_TicketDescription",
-            schemaXml: `<Field Type='Lookup' Name='TicketID_TicketDescription' StaticName='TicketID_TicketDescription' DisplayName='TicketDescription' List='${ticketListId}' ShowField='TicketDescription' />`
-        },
+        // {
+        //     internalName: "TicketID_Title",
+        //     schemaXml: `<Field Type='Lookup' Name='TicketID_Title' StaticName='TicketID_Title' DisplayName='TicketTitle' List='${ticketListId}' ShowField='Title' />`
+        // },
+        // {
+        //     internalName: "TicketID_TicketDescription",
+        //     schemaXml: `<Field Type='Lookup' Name='TicketID_TicketDescription' StaticName='TicketID_TicketDescription' DisplayName='TicketDescription' List='${ticketListId}' ShowField='TicketDescription' />`
+        // },
         {
             internalName: "AssignedTo",
             schemaXml: `<Field Type='User' Name='AssignedTo' StaticName='AssignedTo' DisplayName='AssignedTo' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
@@ -86,7 +86,7 @@ function buildFieldDefinitions(ticketListId: string): FieldDefinition<AMSTicketE
         },
         {
             internalName: "TaskStatus",
-            schemaXml: buildChoiceFieldSchema("TaskStatus", "TaskStatus", taskStatusChoices as readonly string[], true)
+            schemaXml: buildChoiceFieldSchema("TaskStatus", "TaskStatus", taskStatusChoices as readonly string[], false)
         },
         {
             internalName: "ActualEffort",
@@ -109,8 +109,8 @@ function buildFieldDefinitions(ticketListId: string): FieldDefinition<AMSTicketE
 
 const defaultViewFields: readonly AMSTicketEffortLogViewField[] = [
     "TicketID",
-    "TicketID_Title",
-    "TicketID_TicketDescription",
+    // "TicketID_Title",
+    // "TicketID_TicketDescription",
     "AssignedTo",
     "UniqueEffortID",
     "TaskType",

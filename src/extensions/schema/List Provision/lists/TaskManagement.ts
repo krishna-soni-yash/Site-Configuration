@@ -16,8 +16,8 @@ const LIST_TITLE = RequiredListsProvision.TaskManagement;
 
 type TaskManagementFieldName =
     | "WorkItemNo"
-    | "WorkItemNo_ReqTitle"
-    | "WorkItemNo_WorkItemNo"
+    // | "WorkItemNo_ReqTitle"
+    // | "WorkItemNo_WorkItemNo"
     | "UniqueTaskID"
     | "TaskType"
     | "AssignedTo"
@@ -115,14 +115,14 @@ function buildFieldDefinitions(workLogListId: string): FieldDefinition<TaskManag
             internalName: "WorkItemNo",
             schemaXml: `<Field Type='Lookup' Name='WorkItemNo' StaticName='WorkItemNo' DisplayName='WorkItemNo' List='${workLogListId}' ShowField='ID' LookupId='TRUE' />`
         },
-        {
-            internalName: "WorkItemNo_ReqTitle",
-            schemaXml: `<Field Type='Lookup' Name='WorkItemNo_ReqTitle' StaticName='WorkItemNo_ReqTitle' DisplayName='WorkItemReqTitle' List='${workLogListId}' ShowField='ReqTitle' />`
-        },
-        {
-            internalName: "WorkItemNo_WorkItemNo",
-            schemaXml: `<Field Type='Lookup' Name='WorkItemNo_WorkItemNo' StaticName='WorkItemNo_WorkItemNo' DisplayName='WorkItemWorkItemNo' List='${workLogListId}' ShowField='WorkItemNo' />`
-        },
+        // {
+        //     internalName: "WorkItemNo_ReqTitle",
+        //     schemaXml: `<Field Type='Lookup' Name='WorkItemNo_ReqTitle' StaticName='WorkItemNo_ReqTitle' DisplayName='WorkItemReqTitle' List='${workLogListId}' ShowField='ReqTitle' />`
+        // },
+        // {
+        //     internalName: "WorkItemNo_WorkItemNo",
+        //     schemaXml: `<Field Type='Lookup' Name='WorkItemNo_WorkItemNo' StaticName='WorkItemNo_WorkItemNo' DisplayName='WorkItemWorkItemNo' List='${workLogListId}' ShowField='WorkItemNo' />`
+        // },
         {
             internalName: "UniqueTaskID",
             schemaXml: `<Field Type='Text' Name='UniqueTaskID' StaticName='UniqueTaskID' DisplayName='UniqueTaskID' MaxLength='255' />`
@@ -161,8 +161,8 @@ function buildFieldDefinitions(workLogListId: string): FieldDefinition<TaskManag
 
 const defaultViewFields: readonly TaskManagementViewField[] = [
     "WorkItemNo",
-    "WorkItemNo_ReqTitle",
-    "WorkItemNo_WorkItemNo",
+    // "WorkItemNo_ReqTitle",
+    // "WorkItemNo_WorkItemNo",
     "UniqueTaskID",
     "TaskType",
     "AssignedTo",

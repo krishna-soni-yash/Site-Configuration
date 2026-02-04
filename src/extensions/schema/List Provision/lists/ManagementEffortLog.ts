@@ -106,7 +106,7 @@ export async function provisionManagementEffortLog(sp: SPFI): Promise<void> {
 		description: "Management effort log list",
 		templateId: 100,
 		fields,
-		indexedFields: ["TaskDescription", "UpdatedBy"],
+		indexedFields: ["UpdatedBy", "ManagementTaskID", "Completion"],
 		defaultViewFields,
 		removeFields: removeExistingFields
 	};

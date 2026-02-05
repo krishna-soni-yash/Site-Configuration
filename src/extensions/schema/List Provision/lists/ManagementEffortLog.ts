@@ -29,7 +29,7 @@ function buildFieldDefinitions(taskLogListId: string): FieldDefinition<Managemen
 	return [
 		{
 			internalName: "TaskDescription",
-			schemaXml: `<Field Type='Text' Name='TaskDescription' StaticName='TaskDescription' DisplayName='TaskDescription' MaxLength='255' />`
+			schemaXml: `<Field Type='Note' Name='TaskDescription' StaticName='TaskDescription' DisplayName='TaskDescription' NumLines='6' RichText='FALSE' />`
 		},
 		{
 			internalName: "ActualStartDate",

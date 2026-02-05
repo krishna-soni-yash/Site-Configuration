@@ -35,7 +35,7 @@ function buildFieldDefinitions(managementTaskLogListId: string): FieldDefinition
 		},
 		{
 			internalName: "Finding",
-			schemaXml: `<Field Type='Text' Name='Finding' StaticName='Finding' DisplayName='Finding' MaxLength='255' />`
+			schemaXml: `<Field Type='Note' Name='Finding' StaticName='Finding' DisplayName='Finding' NumLines='6' RichText='FALSE' />`
 		},
 		{
 			internalName: "FindingDate",

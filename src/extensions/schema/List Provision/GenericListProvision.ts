@@ -12,6 +12,13 @@ export type FieldDefinition<TInternalName extends string> = {
     schemaXml: string;
 };
 
+export type FieldUpdateDefinition<TInternalName extends string> = {
+    internalName: TInternalName | string;
+    properties: Record<string, unknown>;
+    /** When true (default), silently skip if the field is missing */
+    skipIfMissing?: boolean;
+};
+
 interface ViewDefinition<TViewField extends string> {
     title: string;
     fields: readonly TViewField[];
@@ -26,6 +33,7 @@ export interface ListProvisionDefinition<TFieldName extends string, TViewField e
     description?: string;
     templateId?: number;
     fields?: readonly FieldDefinition<TFieldName>[];
+    updateFields?: readonly FieldUpdateDefinition<TFieldName>[];
     indexedFields?: readonly (TFieldName | string)[];
     defaultViewFields?: readonly TViewField[];
     /** Optional list of field internal names to remove from the list if they exist */
@@ -64,6 +72,7 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         description = "",
         templateId = 100,
         fields = [],
+        updateFields = [],
         indexedFields = [],
         defaultViewFields = [],
         removeFields = [],
@@ -78,6 +87,10 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         if (!exists) {
             await list.fields.createFieldAsXml(field.schemaXml);
         }
+    }
+
+    if (updateFields.length > 0) {
+        await ensureFieldUpdates(list, title, updateFields as readonly FieldUpdateDefinition<string>[]);
     }
 
     if (removeFields.length > 0) {
@@ -368,6 +381,32 @@ export async function ensureListContentTypes(
             }
         } catch (error) {
             // Reading content types is best-effort.
+        }
+    }
+}
+
+async function ensureFieldUpdates(list: any, listTitle: string, updates: readonly FieldUpdateDefinition<string>[]): Promise<void> {
+    for (const update of updates) {
+        const internalName = `${update.internalName ?? ""}`.trim();
+        if (!internalName) {
+            continue;
+        }
+
+        const properties = update.properties ?? {};
+        if (Object.keys(properties).length === 0) {
+            continue;
+        }
+
+        try {
+            const field = list.fields.getByInternalNameOrTitle(internalName);
+            await field.update(properties);
+        } catch (error: any) {
+            const skip = update.skipIfMissing !== false;
+            const message = error?.data?.odataError?.code ?? error?.message ?? "";
+            const missing = typeof message === "string" && message.includes("-2147024809");
+            if (!(skip && missing)) {
+                console.warn(`Failed to update field ${internalName} on list ${listTitle}:`, error);
+            }
         }
     }
 }

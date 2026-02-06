@@ -121,15 +121,15 @@ const fieldDefinitions: readonly FieldDefinition<RootCauseAnalysisFieldName>[] =
     },
     {
         internalName: "ResponsibilityCorrection",
-        schemaXml: `<Field Type='User' Name='ResponsibilityCorrection' StaticName='ResponsibilityCorrection' DisplayName='ResponsibilityCorrection' UserSelectionMode='PeopleOnly' Mult='FALSE' />`
+        schemaXml: `<Field Type='User' Name='ResponsibilityCorrection' StaticName='ResponsibilityCorrection' DisplayName='ResponsibilityCorrection' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
     },
     {
         internalName: "ResponsibilityCorrective",
-        schemaXml: `<Field Type='User' Name='ResponsibilityCorrective' StaticName='ResponsibilityCorrective' DisplayName='ResponsibilityCorrective' UserSelectionMode='PeopleOnly' Mult='FALSE' />`
+        schemaXml: `<Field Type='User' Name='ResponsibilityCorrective' StaticName='ResponsibilityCorrective' DisplayName='ResponsibilityCorrective' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
     },
     {
         internalName: "ResponsibilityPreventive",
-        schemaXml: `<Field Type='User' Name='ResponsibilityPreventive' StaticName='ResponsibilityPreventive' DisplayName='ResponsibilityPreventive' UserSelectionMode='PeopleOnly' Mult='FALSE' />`
+        schemaXml: `<Field Type='User' Name='ResponsibilityPreventive' StaticName='ResponsibilityPreventive' DisplayName='ResponsibilityPreventive' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
     },
     {
         internalName: "PlannedClosureDateCorrection",
@@ -204,6 +204,20 @@ const definition: ListProvisionDefinition<RootCauseAnalysisFieldName, RootCauseA
     description: "Root Cause Analysis list",
     templateId: 100,
     fields: fieldDefinitions,
+    updateFields: [
+        {
+            internalName: "ResponsibilityCorrection",
+            properties: { AllowMultipleValues: true }
+        },
+        {
+            internalName: "ResponsibilityCorrective",
+            properties: { AllowMultipleValues: true }
+        },
+        {
+            internalName: "ResponsibilityPreventive",
+            properties: { AllowMultipleValues: true }
+        }
+    ],
     defaultViewFields
 };
 

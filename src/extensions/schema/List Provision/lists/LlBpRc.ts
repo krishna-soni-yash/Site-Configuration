@@ -36,15 +36,15 @@ const fieldDefinitions: readonly FieldDefinition<LlBpRcFieldName>[] = [
 	},
 	{
 		internalName: "LlProblemFacedLearning",
-		schemaXml: `<Field Type='Text' Name='LlProblemFacedLearning' StaticName='LlProblemFacedLearning' DisplayName='LlProblemFacedLearning' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='LlProblemFacedLearning' StaticName='LlProblemFacedLearning' DisplayName='LlProblemFacedLearning' NumLines='6' RichText='FALSE' />`
 	},
 	{
 		internalName: "LlCategory",
-		schemaXml: `<Field Type='Text' Name='LlCategory' StaticName='LlCategory' DisplayName='LlCategory' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='LlCategory' StaticName='LlCategory' DisplayName='LlCategory' NumLines='6' RichText='FALSE' />`
 	},
 	{
 		internalName: "LlSolution",
-		schemaXml: `<Field Type='Text' Name='LlSolution' StaticName='LlSolution' DisplayName='LlSolution' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='LlSolution' StaticName='LlSolution' DisplayName='LlSolution' NumLines='6' RichText='FALSE' />`
 	},
 	{
 		internalName: "LlRemarks",
@@ -56,7 +56,7 @@ const fieldDefinitions: readonly FieldDefinition<LlBpRcFieldName>[] = [
 	},
 	{
 		internalName: "BpCategory",
-		schemaXml: `<Field Type='Text' Name='BpCategory' StaticName='BpCategory' DisplayName='BpCategory' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='BpCategory' StaticName='BpCategory' DisplayName='BpCategory' NumLines='6' RichText='FALSE' />`
 	},
 	{
 		internalName: "BpRemarks",
@@ -64,7 +64,7 @@ const fieldDefinitions: readonly FieldDefinition<LlBpRcFieldName>[] = [
 	},
 	{
 		internalName: "RcComponentName",
-		schemaXml: `<Field Type='Text' Name='RcComponentName' StaticName='RcComponentName' DisplayName='RcComponentName' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='RcComponentName' StaticName='RcComponentName' DisplayName='RcComponentName' NumLines='6' RichText='FALSE' />`
 	},
 	{
 		internalName: "RcLocation",
@@ -72,11 +72,11 @@ const fieldDefinitions: readonly FieldDefinition<LlBpRcFieldName>[] = [
 	},
 	{
 		internalName: "RcPurposeMainFunctionality",
-		schemaXml: `<Field Type='Text' Name='RcPurposeMainFunctionality' StaticName='RcPurposeMainFunctionality' DisplayName='RcPurposeMainFunctionality' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='RcPurposeMainFunctionality' StaticName='RcPurposeMainFunctionality' DisplayName='RcPurposeMainFunctionality' NumLines='6' RichText='FALSE' />`
 	},
 	{
 		internalName: "RcRemarks",
-		schemaXml: `<Field Type='Text' Name='RcRemarks' StaticName='RcRemarks' DisplayName='RcRemarks' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='RcRemarks' StaticName='RcRemarks' DisplayName='RcRemarks' NumLines='6' RichText='FALSE' />`
 	}
 ] as const;
 
@@ -139,7 +139,7 @@ const definition: ListProvisionDefinition<LlBpRcFieldName, LlBpRcViewField> = {
 	description: "Lessons learnt, best practices, and reusable components",
 	templateId: 100,
 	fields: fieldDefinitions,
-	indexedFields: ["LlProblemFacedLearning", "BpCategory", "RcComponentName"],
+	indexedFields: [],
 	defaultViewFields: lessonsLearntViewFields,
 	views: viewDefinitions
 };

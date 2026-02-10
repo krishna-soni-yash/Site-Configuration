@@ -117,7 +117,7 @@ export async function provisionActionItemsTracker(sp: SPFI): Promise<void> {
 		description: "Action items tracker list",
 		templateId: 100,
 		fields,
-		indexedFields: ["Status", "ActionItem"],
+		indexedFields: ["Status", "ActionItem", "Plannedclosuredate", "MoM", "Actualclosuredate"],
 		defaultViewFields,
 		views: viewDefinitions
 	};

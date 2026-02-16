@@ -32,6 +32,7 @@ type CodeReviewDefectsFieldName =
 	| "PlannedClosureDate"
 	| "ActualClosureDate"
 	| "LocationOfDefect"
+	| "DefectDescription"
 	| "Remarks";
 
 type CodeReviewDefectsViewField = CodeReviewDefectsFieldName | "LinkTitle";
@@ -110,6 +111,10 @@ const fieldDefinitions: readonly FieldDefinition<CodeReviewDefectsFieldName>[] =
 		schemaXml: `<Field Type='Text' Name='LocationOfDefect' StaticName='LocationOfDefect' DisplayName='LocationOfDefect' MaxLength='255' />`
 	},
 	{
+		internalName: "DefectDescription",
+		schemaXml: `<Field Type='Note' Name='DefectDescription' StaticName='DefectDescription' DisplayName='DefectDescription' NumLines='6' RichText='FALSE' />`
+	},
+	{
 		internalName: "Remarks",
 		schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />`
 	}
@@ -135,6 +140,7 @@ const defaultViewFields: readonly CodeReviewDefectsViewField[] = [
 	"PlannedClosureDate",
 	"ActualClosureDate",
 	"LocationOfDefect",
+	"DefectDescription",
 	"Remarks"
 ] as const;
 
@@ -158,6 +164,7 @@ const displayNameMappings: ReadonlyArray<{ internalName: CodeReviewDefectsFieldN
 	{ internalName: "PlannedClosureDate", displayName: "Planned Closure Date" },
 	{ internalName: "ActualClosureDate", displayName: "Actual Closure Date" },
 	{ internalName: "LocationOfDefect", displayName: "Location of defect (Sub section - Line Number)" },
+	{ internalName: "DefectDescription", displayName: "Defect Description" },
 	{ internalName: "Remarks", displayName: "Remarks" }
 ];
 

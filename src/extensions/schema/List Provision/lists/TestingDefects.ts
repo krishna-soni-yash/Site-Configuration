@@ -101,7 +101,7 @@ const fieldDefinitions: readonly FieldDefinition<TestingDefectsFieldName>[] = [
 	},
 	{
 		internalName: "Remarks",
-		schemaXml: `<Field Type='Text' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' MaxLength='255' />`
+		schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />`
 	},
 	{
 		internalName: "Defect Fixed By",

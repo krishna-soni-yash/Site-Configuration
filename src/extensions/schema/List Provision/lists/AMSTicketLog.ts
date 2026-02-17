@@ -23,7 +23,7 @@ type AMSTicketLogFieldName =
 
 type AMSTicketLogViewField = AMSTicketLogFieldName | "ID" | "Title" | "Modified" | "Editor";
 
-const priorityChoices = ["P1", "P2", "P3", "P4"] as const;
+const priorityChoices = ["P1", "P2", "P3", "P4", "P5/Service Request"] as const;
 const statusChoices = ["Open", "Closed", "Resolved", "Hold"] as const;
 
 function buildChoiceFieldSchema(name: string, displayName: string, choices: readonly string[]): string {

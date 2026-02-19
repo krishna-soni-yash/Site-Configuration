@@ -173,8 +173,7 @@ const definition: ListProvisionDefinition<CodeReviewDefectsFieldName, CodeReview
 	description: "Code review defects list",
 	templateId: 100,
 	fields: fieldDefinitions,
-	indexedFields: ["Requirement ID / Ticket ID", "Code File/ Class Name", 
-		"Reviewer Name", "Defect Type","Defect Status", "Severity"],
+	indexedFields: ["Defect Status"],
 	defaultViewFields
 };
 

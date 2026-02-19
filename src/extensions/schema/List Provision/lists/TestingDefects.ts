@@ -136,8 +136,7 @@ const definition: ListProvisionDefinition<TestingDefectsFieldName, TestingDefect
 	description: "Testing defects list",
 	templateId: 100,
 	fields: fieldDefinitions,
-	indexedFields: ["Test Scenario ID", "Test Case ID", "Defect ID", "Review method",
-		"Defect Detected by", "Defect Status", "Defect Type", "Priority"],
+	indexedFields: ["Defect Status"],
 	defaultViewFields
 };
 

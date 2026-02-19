@@ -17,6 +17,7 @@ type WorkLogFieldName =
     | "AssignedToUsers"
     | "ProjectType"
     | "WorkItemNo"
+    | "SprintNo"
     | "Simple"
     | "Medium"
     | "Complex"
@@ -43,6 +44,7 @@ const fieldDefinitions: readonly FieldDefinition<WorkLogFieldName>[] = [
     { internalName: "AssignedToUsers", schemaXml: `<Field Type='User' Name='AssignedToUsers' StaticName='AssignedToUsers' DisplayName='AssignedToUsers' UserSelectionMode='PeopleOnly' Mult='TRUE' />` },
     { internalName: "ProjectType", schemaXml: `<Field Type='Text' Name='ProjectType' StaticName='ProjectType' DisplayName='ProjectType' MaxLength='255' />` },
     { internalName: "WorkItemNo", schemaXml: `<Field Type='Text' Name='WorkItemNo' StaticName='WorkItemNo' DisplayName='WorkItemNo' MaxLength='255' />` },
+    { internalName: "SprintNo", schemaXml: `<Field Type='Text' Name='SprintNo' StaticName='SprintNo' DisplayName='SprintNo' MaxLength='255' />` },
     { internalName: "Simple", schemaXml: `<Field Type='Number' Name='Simple' StaticName='Simple' DisplayName='Simple' Decimals='2' />` },
     { internalName: "Medium", schemaXml: `<Field Type='Number' Name='Medium' StaticName='Medium' DisplayName='Medium' Decimals='2' />` },
     { internalName: "Complex", schemaXml: `<Field Type='Number' Name='Complex' StaticName='Complex' DisplayName='Complex' Decimals='2' />` },
@@ -69,6 +71,7 @@ const defaultViewFields: readonly WorkLogViewField[] = [
     "AssignedToUsers",
     "ProjectType",
     "WorkItemNo",
+    "SprintNo",
     "Simple",
     "Medium",
     "Complex",

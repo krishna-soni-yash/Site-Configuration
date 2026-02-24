@@ -23,11 +23,15 @@ type FacilitationReportFieldName =
 	| "Status"
 	| "Remarks"
 	| "ManagementTaskID"
+	| "ManagementEffortID"
     | "Attachments";
 
 type FacilitationReportViewField = FacilitationReportFieldName;
 
-function buildFieldDefinitions(managementTaskLogListId: string): FieldDefinition<FacilitationReportFieldName>[] {
+function buildFieldDefinitions(
+	managementTaskLogListId: string,
+	managementEffortLogListId: string
+): FieldDefinition<FacilitationReportFieldName>[] {
 	return [
 		{
 			internalName: "Category",
@@ -64,6 +68,10 @@ function buildFieldDefinitions(managementTaskLogListId: string): FieldDefinition
 		{
 			internalName: "ManagementTaskID",
 			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${managementTaskLogListId}' ShowField='ID' LookupId='TRUE' />`
+		},
+		{
+			internalName: "ManagementEffortID",
+			schemaXml: `<Field Type='Lookup' Name='ManagementEffortID' StaticName='ManagementEffortID' DisplayName='ManagementEffortID' List='${managementEffortLogListId}' ShowField='ID' LookupId='TRUE' />`
 		}
 	];
 }
@@ -78,6 +86,7 @@ const defaultViewFields: readonly FacilitationReportViewField[] = [
 	"Status",
 	"Remarks",
 	"ManagementTaskID",
+	"ManagementEffortID",
     "Attachments"
 ] as const;
 
@@ -110,6 +119,33 @@ async function ensureManagementTaskLogListId(sp: SPFI): Promise<string> {
 	return managementTaskLogId;
 }
 
+async function ensureManagementEffortLogListId(sp: SPFI): Promise<string> {
+	let managementEffortLogId: string | undefined;
+
+	try {
+		const listInfo = await sp.web.lists.getByTitle(RequiredListsProvision.ManagementEffortLog).select("Id")();
+		managementEffortLogId = `${listInfo.Id}`;
+	} catch (error) {
+		const ensureResult = await sp.web.lists.ensure(
+			RequiredListsProvision.ManagementEffortLog,
+			"Management effort log list",
+			100
+		);
+		const ensuredInfo = await ensureResult.list.select("Id")();
+		managementEffortLogId = `${ensuredInfo.Id}`;
+	}
+
+	if (!managementEffortLogId) {
+		throw new Error("Unable to resolve Management Effort Log list identifier.");
+	}
+
+	if (!managementEffortLogId.startsWith("{")) {
+		managementEffortLogId = `{${managementEffortLogId}}`;
+	}
+
+	return managementEffortLogId;
+}
+
 async function setDefaultViewFieldsOnly(
 	sp: SPFI,
 	listTitle: string,
@@ -134,15 +170,18 @@ async function setDefaultViewFieldsOnly(
 }
 
 export async function provisionFacilitationReport(sp: SPFI): Promise<void> {
-	const managementTaskLogId = await ensureManagementTaskLogListId(sp);
-	const fields = buildFieldDefinitions(managementTaskLogId);
+	const [managementTaskLogId, managementEffortLogId] = await Promise.all([
+		ensureManagementTaskLogListId(sp),
+		ensureManagementEffortLogListId(sp)
+	]);
+	const fields = buildFieldDefinitions(managementTaskLogId, managementEffortLogId);
 
 	const definition: ListProvisionDefinition<FacilitationReportFieldName, FacilitationReportViewField> = {
 		title: LIST_TITLE,
 		description: "Facilitation report list",
 		templateId: 100,
 		fields,
-		indexedFields: ["Status", "Assigned", "ManagementTaskID"],
+		indexedFields: ["Status", "Assigned", "ManagementTaskID", "ManagementEffortID"],
 		defaultViewFields,
 		removeFields: removeExistingFields
 	};

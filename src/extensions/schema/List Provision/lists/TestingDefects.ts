@@ -13,7 +13,7 @@ import { RequiredListsProvision } from "../RequiredListProvision";
 const LIST_TITLE = RequiredListsProvision.TestingDefects;
 
 type TestingDefectsFieldName =
-	| "Test Scenario ID"
+	"Test Scenario ID"
 	| "Test Case ID"
 	| "Defect ID"
 	| "Defect Description"
@@ -30,7 +30,8 @@ type TestingDefectsFieldName =
 	| "Root Cause"
 	| "Defect Closure Date"
 	| "Remarks"
-	| "Defect Fixed By";
+	| "Defect Fixed By"
+	| "EnvironmentDetail";
 
 type TestingDefectsViewField = TestingDefectsFieldName | "LinkTitle";
 
@@ -106,6 +107,10 @@ const fieldDefinitions: readonly FieldDefinition<TestingDefectsFieldName>[] = [
 	{
 		internalName: "Defect Fixed By",
 		schemaXml: `<Field Type='User' Name='Defect Fixed By' StaticName='Defect Fixed By' DisplayName='Defect Fixed By' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
+	},
+	{
+		internalName: "EnvironmentDetail",
+		schemaXml: `<Field Type='Note' Name='EnvironmentDetail' StaticName='EnvironmentDetail' DisplayName='Environment Detail' NumLines='6' RichText='FALSE' />`
 	}
 ] as const;
 
@@ -128,7 +133,8 @@ const defaultViewFields: readonly TestingDefectsViewField[] = [
 	"Root Cause",
 	"Defect Closure Date",
 	"Remarks",
-	"Defect Fixed By"
+	"Defect Fixed By",
+	"EnvironmentDetail"
 ] as const;
 
 const definition: ListProvisionDefinition<TestingDefectsFieldName, TestingDefectsViewField> = {

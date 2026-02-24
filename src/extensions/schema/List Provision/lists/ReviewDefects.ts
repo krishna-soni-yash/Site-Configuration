@@ -78,7 +78,7 @@ const defectClassificationChoices = [
 ] as const;
 const severityChoices = ["--Select--", "Critical", "Moderate", "Minor"] as const;
 const statusChoices = ["--Select--", "Open", "Closed", "Deferred", "In-Process"] as const;
-const reviewResultsChoices = ["--Select--", "Open", "Closed", "Deferred", "In-Process"] as const;
+const reviewResultsChoices = ["Accepted", "Rejected", "Accepted with Re review", "Rejected with Re review"] as const;
 const defectPhaseChoices = [
 	"--Select--",
 	"Requirements Specification",

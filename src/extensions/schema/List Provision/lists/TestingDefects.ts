@@ -29,6 +29,7 @@ type TestingDefectsFieldName =
 	| "Priority"
 	| "Root Cause"
 	| "Defect Closure Date"
+	| "Planned Closure Date"
 	| "Remarks"
 	| "Defect Fixed By"
 	| "EnvironmentDetail";
@@ -59,6 +60,10 @@ const fieldDefinitions: readonly FieldDefinition<TestingDefectsFieldName>[] = [
 	{
 		internalName: "Defect detected on",
 		schemaXml: `<Field Type='DateTime' Name='Defect detected on' StaticName='Defect detected on' DisplayName='Defect detected on' Format='DateOnly' />`
+	},
+	{
+		internalName: "Planned Closure Date",
+		schemaXml: `<Field Type='DateTime' Name='Planned Closure Date' StaticName='Planned Closure Date' DisplayName='Planned Closure Date' Format='DateOnly' />`
 	},
 	{
 		internalName: "Defect Detected by",
@@ -121,6 +126,7 @@ const defaultViewFields: readonly TestingDefectsViewField[] = [
 	"Defect ID",
 	"Defect Description",
 	"Review method",
+	"Planned Closure Date",
 	"Defect detected on",
 	"Defect Detected by",
 	"Defect Status",

@@ -14,6 +14,7 @@ import { RequiredListsProvision } from "../RequiredListProvision";
 const LIST_TITLE = RequiredListsProvision.FacilitationReport;
 
 type FacilitationReportFieldName =
+	| "TaskDescription"
 	| "Category"
 	| "Finding"
 	| "FindingDate"
@@ -33,6 +34,10 @@ function buildFieldDefinitions(
 	managementEffortLogListId: string
 ): FieldDefinition<FacilitationReportFieldName>[] {
 	return [
+		{
+			internalName: "TaskDescription",
+			schemaXml: `<Field Type='Note' Name='TaskDescription' StaticName='TaskDescription' DisplayName='TaskDescription' NumLines='6' RichText='FALSE' />`
+		},
 		{
 			internalName: "Category",
 			schemaXml: `<Field Type='Text' Name='Category' StaticName='Category' DisplayName='Category' MaxLength='255' />`
@@ -77,6 +82,7 @@ function buildFieldDefinitions(
 }
 
 const defaultViewFields: readonly FacilitationReportViewField[] = [
+	"TaskDescription",
 	"Category",
 	"Finding",
 	"FindingDate",

@@ -35,10 +35,6 @@ function buildFieldDefinitions(
 ): FieldDefinition<FacilitationReportFieldName>[] {
 	return [
 		{
-			internalName: "TaskDescription",
-			schemaXml: `<Field Type='Note' Name='TaskDescription' StaticName='TaskDescription' DisplayName='TaskDescription' NumLines='6' RichText='FALSE' />`
-		},
-		{
 			internalName: "Category",
 			schemaXml: `<Field Type='Text' Name='Category' StaticName='Category' DisplayName='Category' MaxLength='255' />`
 		},
@@ -82,7 +78,6 @@ function buildFieldDefinitions(
 }
 
 const defaultViewFields: readonly FacilitationReportViewField[] = [
-	"TaskDescription",
 	"Category",
 	"Finding",
 	"FindingDate",
@@ -96,7 +91,7 @@ const defaultViewFields: readonly FacilitationReportViewField[] = [
     "Attachments"
 ] as const;
 
-const removeExistingFields: readonly FacilitationReportFieldName[] = [];
+const removeExistingFields: readonly FacilitationReportFieldName[] = ["TaskDescription"];
 
 async function ensureManagementTaskLogListId(sp: SPFI): Promise<string> {
 	let managementTaskLogId: string | undefined;

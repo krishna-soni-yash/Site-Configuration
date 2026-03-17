@@ -1,5 +1,4 @@
 /*eslint-disable*/
-import { RequiredListsProvision } from '../List Provision/RequiredListProvision';
 import { ProjectDocumentsLibraryName } from '../Library Provsion/libraries/ProjectDocuments';
 
 export interface IListBindingConfig {
@@ -28,7 +27,8 @@ enum WebParts{
 	PPOWebPart = 'aec7bd2e-5d17-4a98-89c0-ddb541197235',
 	AMSWebpart = 'bc0d2a5f-1168-4a7b-b218-6b39bffd9e11',
 	EstimationsWebPart = '1e0bf94d-fcd7-4556-97ac-a334deb8ff36',
-	HideBannerWebPart = '137d8eae-8e43-42fd-ad03-52842b02daeb'
+	HideBannerWebPart = '137d8eae-8e43-42fd-ad03-52842b02daeb',
+	DefectsWebPart = 'd199e076-7cf1-4458-a274-eef36888c787'
 }
 
 export const WebPartList: IWebPartEntry[] = [
@@ -36,37 +36,13 @@ export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.AuditWebPart, pageName: 'Audit', homePage: false },
 	
 	{ id: WebParts.HomePageWebPart, pageName: 'Code-Review-Defects', homePage: false },
-	{ id: WebParts.HideBannerWebPart, pageName: 'Code-Review-Defects', homePage: false },
-	{
-		alias: 'ListWebPart',
-		pageName: 'Code-Review-Defects',
-		listBinding: {
-			listTitle: RequiredListsProvision.CodeReviewDefects,
-			webPartTitle: 'Code-Review-Defects'
-		},
-	},
+	{ id: WebParts.DefectsWebPart, pageName: 'Code-Review-Defects', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Review-Defects', homePage: false },
-	{ id: WebParts.HideBannerWebPart, pageName: 'Review-Defects', homePage: false },
-	{
-		alias: 'ListWebPart',
-		pageName: 'Review-Defects',
-		listBinding: {
-			listTitle: RequiredListsProvision.ReviewDefects,
-			webPartTitle: 'Review-Defects'
-		},
-	},
+	{ id: WebParts.DefectsWebPart, pageName: 'Review-Defects', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Testing-Defects', homePage: false },
-	{ id: WebParts.HideBannerWebPart, pageName: 'Testing-Defects', homePage: false },
-	{
-		alias: 'ListWebPart',
-		pageName: 'Testing-Defects',
-		listBinding: {
-			listTitle: RequiredListsProvision.TestingDefects,
-			webPartTitle: 'Testing-Defects'
-		},
-	},
+	{ id: WebParts.DefectsWebPart, pageName: 'Testing-Defects', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Documents', homePage: false },
 	{ id: WebParts.HideBannerWebPart, pageName: 'Documents', homePage: false },

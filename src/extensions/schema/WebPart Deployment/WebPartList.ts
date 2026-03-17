@@ -35,14 +35,8 @@ export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.HomePageWebPart, pageName: 'Audit', homePage: false },
 	{ id: WebParts.AuditWebPart, pageName: 'Audit', homePage: false },
 	
-	{ id: WebParts.HomePageWebPart, pageName: 'Code-Review-Defects', homePage: false },
-	{ id: WebParts.DefectsWebPart, pageName: 'Code-Review-Defects', homePage: false },
-
-	{ id: WebParts.HomePageWebPart, pageName: 'Review-Defects', homePage: false },
-	{ id: WebParts.DefectsWebPart, pageName: 'Review-Defects', homePage: false },
-
-	{ id: WebParts.HomePageWebPart, pageName: 'Testing-Defects', homePage: false },
-	{ id: WebParts.DefectsWebPart, pageName: 'Testing-Defects', homePage: false },
+	{ id: WebParts.HomePageWebPart, pageName: 'Defects-Lists', homePage: false },
+	{ id: WebParts.DefectsWebPart, pageName: 'Defects-Lists', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Documents', homePage: false },
 	{ id: WebParts.HideBannerWebPart, pageName: 'Documents', homePage: false },

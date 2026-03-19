@@ -107,14 +107,6 @@ async function ensureTitleRenamed(sp: SPFI): Promise<void> {
 	}
 }
 
-function toNumber(value: unknown): number {
-	if (typeof value === "number") {
-		return value;
-	}
-	const parsed = Number(`${value ?? ""}`);
-	return Number.isFinite(parsed) ? parsed : 0;
-}
-
 async function ensureSeedData(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
 	const existing = await list.items.select("Id").top(1)();

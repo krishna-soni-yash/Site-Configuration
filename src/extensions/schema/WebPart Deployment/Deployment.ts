@@ -35,6 +35,10 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 		let createdNewPage = false;
 
 		if (!page) {
+			const alreadyExists = await pageExists(sp, pageServerRelativeUrl);
+			if (alreadyExists) {
+				continue;
+			}
 			page = await createClientsidePage(sp, pageFileName, entry.pageName);
 			if (!page) {
 				console.error(`Failed to ensure page ${entry.pageName}, skipping webpart add.`);
@@ -82,6 +86,15 @@ async function loadExistingPage(sp: SPFI, pageServerRelativeUrl: string): Promis
 		return page;
 	} catch (error) {
 		return undefined;
+	}
+}
+
+async function pageExists(sp: SPFI, pageServerRelativeUrl: string): Promise<boolean> {
+	try {
+		const file = await sp.web.getFileByServerRelativePath(pageServerRelativeUrl).select("Exists")();
+		return !!file?.Exists;
+	} catch (error) {
+		return false;
 	}
 }
 

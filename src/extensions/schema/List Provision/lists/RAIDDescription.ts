@@ -80,27 +80,13 @@ const seedItems: ReadonlyArray<{ Title: string; Description: string }> = [
 
 async function ensureSeedData(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
-	const existing = await list.items.select("Id", "Title", "Description")();
-	const existingKeys = new Map<string, number>();
-	for (const item of existing) {
-		const key = `${item.Title ?? ""}||${item.Description ?? ""}`;
-		existingKeys.set(key, Number(item.Id));
+	const existing = await list.items.select("Id").top(1)();
+	if (existing.length > 0) {
+		return;
 	}
 
-	const desiredKeys = new Set<string>();
 	for (const seed of seedItems) {
-		const key = `${seed.Title}||${seed.Description}`;
-		desiredKeys.add(key);
-		if (!existingKeys.has(key)) {
-			await list.items.add({ Title: seed.Title, Description: seed.Description });
-		}
-	}
-
-	const existingEntries = Array.from(existingKeys.entries());
-	for (const [key, id] of existingEntries) {
-		if (!desiredKeys.has(key)) {
-			await list.items.getById(id).delete();
-		}
+		await list.items.add({ Title: seed.Title, Description: seed.Description });
 	}
 }
 

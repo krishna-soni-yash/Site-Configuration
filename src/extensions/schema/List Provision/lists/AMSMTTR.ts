@@ -117,74 +117,19 @@ function toNumber(value: unknown): number {
 
 async function ensureSeedData(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
-	const existingItems = await list.items.select(
-		"Id",
-		"Title",
-		"responseTimeMin",
-		"responseTimeMax",
-		"resolutionTimeMin",
-		"resolutionTimeMax"
-	)();
-
-	const existingMap = new Map<
-		string,
-		{
-			id: number;
-			responseTimeMin: number;
-			responseTimeMax: number;
-			resolutionTimeMin: number;
-			resolutionTimeMax: number;
-		}
-	>();
-
-	for (const item of existingItems) {
-		const title = `${item.Title ?? ""}`;
-		if (!title) {
-			continue;
-		}
-		existingMap.set(title, {
-			id: Number(item.Id),
-			responseTimeMin: toNumber(item.responseTimeMin),
-			responseTimeMax: toNumber(item.responseTimeMax),
-			resolutionTimeMin: toNumber(item.resolutionTimeMin),
-			resolutionTimeMax: toNumber(item.resolutionTimeMax)
-		});
+	const existing = await list.items.select("Id").top(1)();
+	if (existing.length > 0) {
+		return;
 	}
 
-	const numericFields: Array<keyof Omit<SeedItem, "Title">> = [
-		"responseTimeMin",
-		"responseTimeMax",
-		"resolutionTimeMin",
-		"resolutionTimeMax"
-	];
-
 	for (const seed of seedItems) {
-		const payload = {
+		await list.items.add({
 			Title: seed.Title,
 			responseTimeMin: seed.responseTimeMin,
 			responseTimeMax: seed.responseTimeMax,
 			resolutionTimeMin: seed.resolutionTimeMin,
 			resolutionTimeMax: seed.resolutionTimeMax
-		};
-
-		const existing = existingMap.get(seed.Title);
-		if (!existing) {
-			await list.items.add(payload);
-			continue;
-		}
-
-		const updates: Partial<typeof payload> = {};
-		for (const field of numericFields) {
-			const target = seed[field];
-			const current = existing[field];
-			if (Math.abs(current - target) > 0.0001) {
-				updates[field] = target;
-			}
-		}
-
-		if (Object.keys(updates).length > 0) {
-			await list.items.getById(existing.id).update(updates);
-		}
+		});
 	}
 }
 

@@ -141,56 +141,13 @@ const seedItems: readonly SeedItem[] = [
 
 async function ensureSeedData(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
-	const existingItems = await list.items.select(
-		"Id",
-		"Title",
-		"ProjectType",
-		"VeryHigh",
-		"High",
-		"Medium",
-		"Low",
-		"VeryLow",
-		"None",
-		"NoReuse"
-	)();
-
-	const existingMap = new Map<string, { id: number; values: Record<string, string> }>();
-	for (const item of existingItems) {
-		const title = `${item.Title ?? ""}`;
-		const projectType = `${item.ProjectType ?? ""}`;
-		if (!title) {
-			continue;
-		}
-		const key = `${title}||${projectType}`;
-		existingMap.set(key, {
-			id: Number(item.Id),
-			values: {
-				ProjectType: projectType,
-				VeryHigh: `${item.VeryHigh ?? ""}`,
-				High: `${item.High ?? ""}`,
-				Medium: `${item.Medium ?? ""}`,
-				Low: `${item.Low ?? ""}`,
-				VeryLow: `${item.VeryLow ?? ""}`,
-				None: `${item.None ?? ""}`,
-				NoReuse: `${item.NoReuse ?? ""}`
-			}
-		});
+	const existing = await list.items.select("Id").top(1)();
+	if (existing.length > 0) {
+		return;
 	}
 
-	const fieldsToSync: Array<keyof SeedItem> = [
-		"ProjectType",
-		"VeryHigh",
-		"High",
-		"Medium",
-		"Low",
-		"VeryLow",
-		"None",
-		"NoReuse"
-	];
-
 	for (const seed of seedItems) {
-		const key = `${seed.Title}||${seed.ProjectType}`;
-		const payload: Record<string, string> = {
+		await list.items.add({
 			Title: seed.Title,
 			ProjectType: seed.ProjectType,
 			VeryHigh: seed.VeryHigh,
@@ -200,26 +157,7 @@ async function ensureSeedData(sp: SPFI): Promise<void> {
 			VeryLow: seed.VeryLow,
 			None: seed.None,
 			NoReuse: seed.NoReuse ?? ""
-		};
-
-		const existing = existingMap.get(key);
-		if (!existing) {
-			await list.items.add(payload);
-			continue;
-		}
-
-		const updates: Record<string, string> = {};
-		for (const field of fieldsToSync) {
-			const target = payload[field] ?? "";
-			const current = existing.values[field as keyof typeof existing.values] ?? "";
-			if (current !== target) {
-				updates[field] = target;
-			}
-		}
-
-		if (Object.keys(updates).length > 0) {
-			await list.items.getById(existing.id).update(updates);
-		}
+		});
 	}
 }
 

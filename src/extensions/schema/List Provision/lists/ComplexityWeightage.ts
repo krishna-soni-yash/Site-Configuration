@@ -102,73 +102,19 @@ function formatNumber(value: number): string {
 
 async function ensureSeedData(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
-	const existingItems = await list.items.select(
-		"Id",
-		"Title",
-		"Simple",
-		"Medium",
-		"Complex",
-		"VeryComplex"
-	)();
-
-	const existingMap = new Map<
-		string,
-		{
-			id: number;
-			values: Record<keyof Omit<SeedItem, "LinkTitle">, string>;
-		}
-	>();
-
-	for (const item of existingItems) {
-		const title = `${item.Title ?? ""}`;
-		if (!title) {
-			continue;
-		}
-		existingMap.set(title, {
-			id: Number(item.Id),
-			values: {
-				Simple: `${item.Simple ?? ""}`,
-				Medium: `${item.Medium ?? ""}`,
-				Complex: `${item.Complex ?? ""}`,
-				VeryComplex: `${item.VeryComplex ?? ""}`
-			}
-		});
+	const existing = await list.items.select("Id").top(1)();
+	if (existing.length > 0) {
+		return;
 	}
 
-	const fields: Array<keyof Omit<SeedItem, "LinkTitle">> = [
-		"Simple",
-		"Medium",
-		"Complex",
-		"VeryComplex"
-	];
-
 	for (const seed of seedItems) {
-		const payload = {
+		await list.items.add({
 			Title: seed.LinkTitle,
 			Simple: formatNumber(seed.Simple),
 			Medium: formatNumber(seed.Medium),
 			Complex: formatNumber(seed.Complex),
 			VeryComplex: formatNumber(seed.VeryComplex)
-		};
-
-		const existing = existingMap.get(seed.LinkTitle);
-		if (!existing) {
-			await list.items.add(payload);
-			continue;
-		}
-
-		const updates: Partial<typeof payload> = {};
-		for (const field of fields) {
-			const target = payload[field];
-			const current = existing.values[field];
-			if (current !== target) {
-				updates[field] = target;
-			}
-		}
-
-		if (Object.keys(updates).length > 0) {
-			await list.items.getById(existing.id).update(updates);
-		}
+		});
 	}
 }
 

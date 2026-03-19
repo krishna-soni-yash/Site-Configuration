@@ -252,61 +252,19 @@ const seedItems: ReadonlyArray<{
 
 async function ensureSeedData(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
-	const existing = await list.items.select(
-		"Id",
-		"Title",
-		"SDLCLifeCycleStage",
-		"MinValue",
-		"MaxValue",
-		"Order0"
-	)();
-	const existingMap = new Map<string, {
-		id: number;
-		SDLCLifeCycleStage: string;
-		MinValue: string;
-		MaxValue: string;
-		Order0: string;
-	}>();
-
-	for (const item of existing) {
-		if (typeof item.Title === "string" && item.Title.length > 0) {
-			existingMap.set(item.Title, {
-				id: Number(item.Id),
-				SDLCLifeCycleStage: `${item.SDLCLifeCycleStage ?? ""}`,
-				MinValue: `${item.MinValue ?? ""}`,
-				MaxValue: `${item.MaxValue ?? ""}`,
-				Order0: `${item.Order0 ?? ""}`
-			});
-		}
+	const existing = await list.items.select("Id").top(1)();
+	if (existing.length > 0) {
+		return;
 	}
 
 	for (const seed of seedItems) {
-		const match = existingMap.get(seed.Title);
-		if (!match) {
-			await list.items.add({
-				Title: seed.Title,
-				SDLCLifeCycleStage: seed.SDLCLifeCycleStage,
-				MinValue: seed.MinValue,
-				MaxValue: seed.MaxValue,
-				Order0: seed.Order0
-			});
-			continue;
-		}
-
-		const needsUpdate =
-			match.SDLCLifeCycleStage !== seed.SDLCLifeCycleStage ||
-			match.MinValue !== seed.MinValue ||
-			match.MaxValue !== seed.MaxValue ||
-			match.Order0 !== seed.Order0;
-
-		if (needsUpdate) {
-			await list.items.getById(match.id).update({
-				SDLCLifeCycleStage: seed.SDLCLifeCycleStage,
-				MinValue: seed.MinValue,
-				MaxValue: seed.MaxValue,
-				Order0: seed.Order0
-			});
-		}
+		await list.items.add({
+			Title: seed.Title,
+			SDLCLifeCycleStage: seed.SDLCLifeCycleStage,
+			MinValue: seed.MinValue,
+			MaxValue: seed.MaxValue,
+			Order0: seed.Order0
+		});
 	}
 }
 

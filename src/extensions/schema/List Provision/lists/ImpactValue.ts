@@ -55,23 +55,13 @@ const seedItems: ReadonlyArray<{ Title: string; Text: string }> = [
 
 async function ensureSeedData(sp: SPFI): Promise<void> {
 	const list = sp.web.lists.getByTitle(LIST_TITLE);
-	const existing = await list.items.select("Id", "Title", "Text")();
-	const existingMap = new Map<string, { id: number; text: string }>();
-	for (const item of existing) {
-		if (typeof item.Title === "string") {
-			existingMap.set(item.Title, { id: Number(item.Id), text: `${item.Text ?? ""}` });
-		}
+	const existing = await list.items.select("Id").top(1)();
+	if (existing.length > 0) {
+		return;
 	}
 
 	for (const seed of seedItems) {
-		const match = existingMap.get(seed.Title);
-		if (!match) {
-			await list.items.add({ Title: seed.Title, Text: seed.Text });
-			continue;
-		}
-		if (match.text !== seed.Text) {
-			await list.items.getById(match.id).update({ Text: seed.Text });
-		}
+		await list.items.add({ Title: seed.Title, Text: seed.Text });
 	}
 }
 

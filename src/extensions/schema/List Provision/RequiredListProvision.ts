@@ -41,7 +41,10 @@ export const RequiredListsProvision = {
     TaskManagement: "TaskManagement",
     CodeReviewDefects: "Code Review Defects",
     TestingDefects: "Testing Defects",
-    ReviewDefects: "Review Defects"
+    ReviewDefects: "Review Defects",
+
+    //Graphs Lists
+    ResourceUtilization: "ResourceUtilization"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -79,8 +82,9 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionFacilitationReport } = await import('./lists/FacilitationReport');
     const { provisionSDLCParams } = await import('./lists/SDLCParams');
     const { provisionReviewDefects } = await import('./lists/ReviewDefects');
+    const { provisionResourceUtilization } = await import('./lists/ResourceUtilization');
 
-     provisionLlBpRc(sp);
+    provisionLlBpRc(sp);
     provisionProjectMetricLogs(sp);
     provisionEmailLogs(sp);
     provisionManagementTaskLog(sp);
@@ -110,4 +114,5 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionFacilitationReport(sp);
     provisionSDLCParams(sp);
     provisionReviewDefects(sp);
+    provisionResourceUtilization(sp);
 }

@@ -42,6 +42,7 @@ export const RequiredListsProvision = {
     CodeReviewDefects: "Code Review Defects",
     TestingDefects: "Testing Defects",
     ReviewDefects: "Review Defects",
+    MonthlyWorkdays: "MonthlyWorkdays",
 
     //Graphs Lists
     ResourceUtilization: "ResourceUtilization",
@@ -85,6 +86,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionReviewDefects } = await import('./lists/ReviewDefects');
     const { provisionResourceUtilization } = await import('./lists/ResourceUtilization');
     const { provisionCostOfQuality } = await import('./lists/CostOfQuality');
+    const { provisionMonthlyWorkdays } = await import('./lists/MonthlyWorkdays');
 
     provisionLlBpRc(sp);
     provisionProjectMetricLogs(sp);
@@ -118,4 +120,5 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionReviewDefects(sp);
     provisionResourceUtilization(sp);
     provisionCostOfQuality(sp);
+    provisionMonthlyWorkdays(sp);
 }

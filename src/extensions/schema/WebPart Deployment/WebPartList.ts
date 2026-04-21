@@ -28,7 +28,8 @@ enum WebParts{
 	AMSWebpart = 'bc0d2a5f-1168-4a7b-b218-6b39bffd9e11',
 	EstimationsWebPart = '1e0bf94d-fcd7-4556-97ac-a334deb8ff36',
 	HideBannerWebPart = '137d8eae-8e43-42fd-ad03-52842b02daeb',
-	DefectsWebPart = 'd199e076-7cf1-4458-a274-eef36888c787'
+	DefectsWebPart = 'd199e076-7cf1-4458-a274-eef36888c787',
+	CustomerSatisfactionIndexWebPart = '160bd2bf-b186-466d-9710-9a57a652cdca'
 }
 
 export const WebPartList: IWebPartEntry[] = [
@@ -67,7 +68,10 @@ export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.AMSWebpart, pageName: 'AMS', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Estimations', homePage: false },
-	{ id: WebParts.EstimationsWebPart, pageName: 'Estimations', homePage: false }
+	{ id: WebParts.EstimationsWebPart, pageName: 'Estimations', homePage: false },
+
+	{ id: WebParts.HomePageWebPart, pageName: 'CSI', homePage: false },
+	{ id: WebParts.CustomerSatisfactionIndexWebPart, pageName: 'CSI', homePage: false }
 ];
 
 export default WebPartList;

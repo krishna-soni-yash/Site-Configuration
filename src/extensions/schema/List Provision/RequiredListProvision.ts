@@ -45,7 +45,7 @@ export const RequiredListsProvision = {
 
     //Graphs Lists
     ResourceUtilization: "ResourceUtilization",
-    CostOfQuality: "CostOfQuality",
+    CostOfQuality: "CostOfQuality"
 };
 
 export function createPnpSpfx(context: any): SPFI {

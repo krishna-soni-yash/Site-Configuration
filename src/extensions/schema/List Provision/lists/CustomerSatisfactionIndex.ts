@@ -12,13 +12,25 @@ import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.CustomerSatisfactionIndex;
 
-type CustomerSatisfactionFieldName = "Remarks" | "CSATAquiredDate";
-type CustomerSatisfactionViewField = CustomerSatisfactionFieldName | "ID" | "Modified" | "Editor" | "Title";
+type CustomerSatisfactionFieldName = "Remarks" | "Goal" | "USL" | "LSL" | "CSATAquiredDate";
+type CustomerSatisfactionViewField = CustomerSatisfactionFieldName |"Title";
 
 const fieldDefinitions: readonly FieldDefinition<CustomerSatisfactionFieldName>[] = [
     {
         internalName: "Remarks",
-        schemaXml: `<Field Type='Text' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' MaxLength='255' />`
+        schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />`
+    },
+    {
+        internalName: "Goal",
+        schemaXml: `<Field Type='Text' Name='Goal' StaticName='Goal' DisplayName='Goal' />`
+    },
+    {
+        internalName: "USL",
+        schemaXml: `<Field Type='Number' Name='USL' StaticName='USL' DisplayName='USL' />`
+    },
+    {
+        internalName: "LSL",
+        schemaXml: `<Field Type='Number' Name='LSL' StaticName='LSL' DisplayName='LSL' />`
     },
     {
         internalName: "CSATAquiredDate",
@@ -27,12 +39,11 @@ const fieldDefinitions: readonly FieldDefinition<CustomerSatisfactionFieldName>[
 ] as const;
 
 const defaultViewFields: readonly CustomerSatisfactionViewField[] = [
-    "ID",
-    "Title",
     "Remarks",
-    "CSATAquiredDate",
-    "Modified",
-    "Editor"
+    "Goal",
+    "USL",
+    "LSL",
+    "CSATAquiredDate"
 ] as const;
 
 const definition: ListProvisionDefinition<CustomerSatisfactionFieldName, CustomerSatisfactionViewField> = {

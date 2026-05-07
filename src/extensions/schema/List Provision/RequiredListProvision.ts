@@ -50,6 +50,7 @@ export const RequiredListsProvision = {
     ScheduleVariation: "ScheduleVariation",
     OverallProductivity: "OverallProductivity",
     EffortDistribution: "EffortDistribution",
+    RAED: "RAED"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -92,6 +93,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionScheduleVariation } = await import('./lists/ScheduleVariation');
     const { provisionOverallProductivity } = await import('./lists/OverallProductivity');
     const { provisionEffortDistribution } = await import('./lists/EffortDistribution');
+    const { provisionRAED } = await import('./lists/RAED');
     const { provisionMonthlyWorkdays } = await import('./lists/MonthlyWorkdays');
 
     provisionLlBpRc(sp);
@@ -129,5 +131,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionScheduleVariation(sp);
     provisionOverallProductivity(sp);
     provisionEffortDistribution(sp);
+    provisionRAED(sp);
     provisionMonthlyWorkdays(sp);
 }

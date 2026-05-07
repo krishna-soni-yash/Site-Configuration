@@ -46,7 +46,8 @@ export const RequiredListsProvision = {
 
     //Graphs Lists
     ResourceUtilization: "ResourceUtilization",
-    CostOfQuality: "CostOfQuality"
+    CostOfQuality: "CostOfQuality",
+    ScheduleVariation: "ScheduleVariation",
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -86,6 +87,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionReviewDefects } = await import('./lists/ReviewDefects');
     const { provisionResourceUtilization } = await import('./lists/ResourceUtilization');
     const { provisionCostOfQuality } = await import('./lists/CostOfQuality');
+    const { provisionScheduleVariation } = await import('./lists/ScheduleVariation');
     const { provisionMonthlyWorkdays } = await import('./lists/MonthlyWorkdays');
 
     provisionLlBpRc(sp);
@@ -120,5 +122,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionReviewDefects(sp);
     provisionResourceUtilization(sp);
     provisionCostOfQuality(sp);
+    provisionScheduleVariation(sp);
     provisionMonthlyWorkdays(sp);
 }

@@ -85,7 +85,15 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
     for (const field of fields) {
         const exists = await fieldExists(sp, title, field.internalName);
         if (!exists) {
-            await list.fields.createFieldAsXml(field.schemaXml);
+            try {
+                await list.fields.createFieldAsXml(field.schemaXml);
+            } catch (error: any) {
+                // If another run/process created the field, skip safely instead of failing provisioning.
+                const existsAfterFailure = await fieldExists(sp, title, field.internalName);
+                if (!existsAfterFailure) {
+                    throw error;
+                }
+            }
         }
     }
 

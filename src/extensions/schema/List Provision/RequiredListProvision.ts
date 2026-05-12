@@ -60,6 +60,7 @@ export const RequiredListsProvision = {
     CodeReviewEffortDensity: "CodeReviewEffortDensity",
     CodeReviewReworkEffortDensity: "CodeReviewReworkEffortDensity",
     UnitTestingEffortDensity: "UnitTestingEffortDensity",
+    TestExecutionEffortDensity: "TestExecutionEffortDensity"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -112,6 +113,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionCodeReviewEffortDensity } = await import('./lists/CodeReviewEffortDensity');
     const { provisionCodeReviewReworkEffortDensity } = await import('./lists/CodeReviewReworkEffortDensity');
     const { provisionUnitTestingEffortDensity } = await import('./lists/UnitTestingEffortDensity');
+    const { provisionTestExecutionEffortDensity } = await import('./lists/TestExecutionEffortDensity');
     const { provisionMonthlyWorkdays } = await import('./lists/MonthlyWorkdays');
 
     provisionLlBpRc(sp);
@@ -159,5 +161,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionCodeReviewEffortDensity(sp);
     provisionCodeReviewReworkEffortDensity(sp);
     provisionUnitTestingEffortDensity(sp);
+    provisionTestExecutionEffortDensity(sp);
     provisionMonthlyWorkdays(sp);
 }

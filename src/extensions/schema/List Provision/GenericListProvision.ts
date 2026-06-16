@@ -63,6 +63,41 @@ async function fieldExists<TFieldName extends string>(sp: SPFI, listTitle: strin
     }
 }
 
+type ExistingListField = {
+    InternalName?: string;
+    Title?: string;
+};
+
+function getSchemaAttributeValue(schemaXml: string, attributeName: string): string | undefined {
+    const regex = new RegExp(`${attributeName}=['\"]([^'\"]+)['\"]`, "i");
+    const match = schemaXml.match(regex);
+    return match?.[1]?.trim();
+}
+
+async function getExistingFieldLookup(list: any): Promise<{
+    byInternalName: Set<string>;
+    byTitle: Set<string>;
+}> {
+    const existingFields = await list.fields.select("InternalName", "Title")() as ExistingListField[];
+    const byInternalName = new Set<string>();
+    const byTitle = new Set<string>();
+
+    for (const field of existingFields) {
+        const internalName = `${field?.InternalName ?? ""}`.trim().toLowerCase();
+        const title = `${field?.Title ?? ""}`.trim().toLowerCase();
+
+        if (internalName) {
+            byInternalName.add(internalName);
+        }
+
+        if (title) {
+            byTitle.add(title);
+        }
+    }
+
+    return { byInternalName, byTitle };
+}
+
 export async function ensureListProvision<TFieldName extends string, TViewField extends string = TFieldName>(
     sp: SPFI,
     definition: ListProvisionDefinition<TFieldName, TViewField>
@@ -82,11 +117,32 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
     const ensureResult = await sp.web.lists.ensure(title, description, templateId);
     const list = ensureResult.list;
 
+    const { byInternalName: existingFieldInternalNames, byTitle: existingFieldTitles } = await getExistingFieldLookup(list);
+    const processedRequestedFields = new Set<string>();
+
     for (const field of fields) {
-        const exists = await fieldExists(sp, title, field.internalName);
-        if (!exists) {
+        const requestedInternalName = `${field.internalName ?? ""}`.trim();
+        const requestedInternalNameKey = requestedInternalName.toLowerCase();
+        const requestedTitle = getSchemaAttributeValue(field.schemaXml, "DisplayName");
+        const requestedTitleKey = `${requestedTitle ?? ""}`.trim().toLowerCase();
+
+        if (processedRequestedFields.has(requestedInternalNameKey)) {
+            continue;
+        }
+        processedRequestedFields.add(requestedInternalNameKey);
+
+        const existsByInternalName = requestedInternalNameKey && existingFieldInternalNames.has(requestedInternalNameKey);
+        const existsByTitle = requestedTitleKey && existingFieldTitles.has(requestedTitleKey);
+
+        if (!existsByInternalName && !existsByTitle) {
             try {
                 await list.fields.createFieldAsXml(field.schemaXml);
+                if (requestedInternalNameKey) {
+                    existingFieldInternalNames.add(requestedInternalNameKey);
+                }
+                if (requestedTitleKey) {
+                    existingFieldTitles.add(requestedTitleKey);
+                }
             } catch (error: any) {
                 // If another run/process created the field, skip safely instead of failing provisioning.
                 const existsAfterFailure = await fieldExists(sp, title, field.internalName);

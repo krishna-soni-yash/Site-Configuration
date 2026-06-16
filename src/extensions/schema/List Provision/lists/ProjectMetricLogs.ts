@@ -19,6 +19,7 @@ type ProjectMetricLogsFieldName =
     | "BUHComments"
     | "ReviewerComments"
     | "CreatedVersion"
+    | "ProjectType"
     | "IsActive";
 
 const statusChoices = ["Draft", "In Review", "In Approval", "Approved", "Rejected"] as const;
@@ -54,6 +55,10 @@ const fieldDefinitions: readonly FieldDefinition<ProjectMetricLogsFieldName>[] =
             .join("")}</CHOICES></Field>`
     },
     {
+        internalName: "ProjectType",
+        schemaXml: `<Field Type='Text' Name='ProjectType' StaticName='ProjectType' DisplayName='ProjectType' MaxLength='255' />`
+    },
+    {
         internalName: "IsActive",
         schemaXml: `<Field Type='Boolean' Name='IsActive' StaticName='IsActive' DisplayName='IsActive' />`
     }
@@ -66,6 +71,7 @@ const defaultViewFields: readonly ProjectMetricLogsFieldName[] = [
     "BUHComments",
     "ReviewerComments",
     "CreatedVersion",
+    "ProjectType",
     "IsActive"
 ] as const;
 

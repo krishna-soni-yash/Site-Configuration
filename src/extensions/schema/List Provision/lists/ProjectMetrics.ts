@@ -56,7 +56,9 @@ const projectMetricsFieldNames = [
     "SubUnitOfMeasure",
     "SubUSL",
     "UnitOfMeasure",
-    "USL"
+    "USL",
+    "camelCaseMetricsFormula",
+    "camelCaseSubMetricsFormula"
 ] as const;
 
 type ProjectMetricsFieldName = typeof projectMetricsFieldNames[number];
@@ -94,7 +96,9 @@ const textFieldNames: readonly ProjectMetricsFieldName[] = [
     "SubMetrics",
     "Subprocess",
     "SubUnitOfMeasure",
-    "UnitOfMeasure"
+    "UnitOfMeasure",
+    "camelCaseMetricsFormula",
+    "camelCaseSubMetricsFormula"
 ] as const;
 
 const noteFieldNames: readonly ProjectMetricsFieldName[] = [
@@ -162,8 +166,8 @@ const defaultViewFields: readonly ProjectMetricsViewField[] = [
     "SubUSL",
     "DataInput",
     "VersionId",
-    "Modified",
-    "Created"
+    "camelCaseMetricsFormula",
+    "camelCaseSubMetricsFormula"
 ] as const;
 
 const yesNoChoices = ["Yes", "No"] as const;

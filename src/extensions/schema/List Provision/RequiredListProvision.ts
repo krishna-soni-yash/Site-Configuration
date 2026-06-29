@@ -62,7 +62,11 @@ export const RequiredListsProvision = {
     UnitTestingEffortDensity: "UnitTestingEffortDensity",
     TestExecutionEffortDensity: "TestExecutionEffortDensity",
     RiskSummary: "RiskSummary",
-    FindingsSummary: "FindingsSummary"
+    FindingsSummary: "FindingsSummary",
+    AgingFindings: "AgingFindings",
+    OpenRootCause: "OpenRootCause",
+    OpenIssues: "OpenIssues",
+    OpenActionItems: "OpenActionItems"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -119,6 +123,10 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionMonthlyWorkdays } = await import('./lists/MonthlyWorkdays');
     const { provisionRiskSummary } = await import('./lists/RiskSummary');
     const { provisionFindingsSummary } = await import('./lists/FindingsSummary');
+    const { provisionAgingFindings } = await import('./lists/AgingFindings');
+    const { provisionOpenRootCause } = await import('./lists/OpenRootCause');
+    const { provisionOpenIssues } = await import('./lists/OpenIssues');
+    const { provisionOpenActionItems } = await import('./lists/OpenActionItems');
 
     provisionLlBpRc(sp);
     provisionProjectMetricLogs(sp);
@@ -169,4 +177,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionMonthlyWorkdays(sp);
     provisionRiskSummary(sp);
     provisionFindingsSummary(sp);
+    provisionAgingFindings(sp);
+    provisionOpenRootCause(sp);
+    provisionOpenIssues(sp);
+    provisionOpenActionItems(sp);
 }

@@ -54,6 +54,21 @@ export interface EnsureListContentTypeOptions {
     removeDefaultContentType?: boolean;
 }
 
+function extractFieldRefsFromViewSchema(schemaXml: string): Set<string> {
+    const fieldRefs = new Set<string>();
+    const regex = /<FieldRef\b[^>]*\bName=['\"]([^'\"]+)['\"]/gi;
+    let match: RegExpExecArray | null = null;
+
+    while ((match = regex.exec(schemaXml)) !== null) {
+        const name = `${match[1] ?? ""}`.trim().toLowerCase();
+        if (name) {
+            fieldRefs.add(name);
+        }
+    }
+
+    return fieldRefs;
+}
+
 async function fieldExists<TFieldName extends string>(sp: SPFI, listTitle: string, fieldName: TFieldName): Promise<boolean> {
     try {
         const field = await sp.web.lists.getByTitle(listTitle).fields.getByInternalNameOrTitle(fieldName).select("Id")();
@@ -114,8 +129,20 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         views = []
     } = definition;
 
-    const ensureResult = await sp.web.lists.ensure(title, description, templateId);
-    const list = ensureResult.list;
+    let list = sp.web.lists.getByTitle(title);
+    let listExists = false;
+
+    try {
+        await list.select("Id")();
+        listExists = true;
+    } catch {
+        listExists = false;
+    }
+
+    if (!listExists) {
+        const ensureResult = await sp.web.lists.ensure(title, description, templateId);
+        list = ensureResult.list;
+    }
 
     const { byInternalName: existingFieldInternalNames, byTitle: existingFieldTitles } = await getExistingFieldLookup(list);
     const processedRequestedFields = new Set<string>();
@@ -182,9 +209,19 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
     if (defaultViewFields.length > 0) {
         const defaultView = list.defaultView;
         const schemaXml = await defaultView.fields.getSchemaXml();
+        const existingDefaultViewFieldRefs = extractFieldRefsFromViewSchema(schemaXml);
+        const processedDefaultViewFields = new Set<string>();
+
         for (const viewField of defaultViewFields) {
-            if (!schemaXml.includes(`Name=\"${viewField}\"`) && !schemaXml.includes(`Name='${viewField}'`)) {
+            const normalizedViewField = `${viewField ?? ""}`.trim().toLowerCase();
+            if (!normalizedViewField || processedDefaultViewFields.has(normalizedViewField)) {
+                continue;
+            }
+            processedDefaultViewFields.add(normalizedViewField);
+
+            if (!existingDefaultViewFieldRefs.has(normalizedViewField)) {
                 await defaultView.fields.add(viewField as any);
+                existingDefaultViewFieldRefs.add(normalizedViewField);
             }
         }
     }

@@ -19,6 +19,7 @@ type ManagementEffortLogFieldName =
 	| "ActualEndDate"
 	| "ActualEffortHrs"
 	| "UpdatedBy"
+	| "IsUpdatedBySQA"
 	| "ManagementTaskID"
 	| "Completion"
 	| "Remarks";
@@ -48,6 +49,10 @@ function buildFieldDefinitions(taskLogListId: string): FieldDefinition<Managemen
 			schemaXml: `<Field Type='User' Name='UpdatedBy' StaticName='UpdatedBy' DisplayName='UpdatedBy' UserSelectionMode='PeopleOnly' Mult='FALSE' />`
 		},
 		{
+			internalName: "IsUpdatedBySQA",
+			schemaXml: `<Field Type='Boolean' Name='IsUpdatedBySQA' StaticName='IsUpdatedBySQA' DisplayName='IsUpdatedBySQA' Default='0' />`
+		},
+		{
 			internalName: "ManagementTaskID",
 			schemaXml: `<Field Type='Lookup' Name='ManagementTaskID' StaticName='ManagementTaskID' DisplayName='ManagementTaskID' List='${taskLogListId}' ShowField='ID' LookupId='TRUE' />`
 		},
@@ -68,6 +73,7 @@ const defaultViewFields: readonly ManagementEffortLogViewField[] = [
 	"ActualEndDate",
 	"ActualEffortHrs",
 	"UpdatedBy",
+	"IsUpdatedBySQA",
 	"ManagementTaskID",
 	"Completion",
 	"Remarks"

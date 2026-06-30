@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.EffortVariation;
 
 type EffortVariationFieldName =
+	| "ApplicableGraphID"
 	| "PlannedEffort"
 	| "ActualEffort"
 	| "Goal"
@@ -65,6 +68,7 @@ const fieldDefinitions: readonly FieldDefinition<EffortVariationFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly EffortVariationViewField[] = [
+	"ApplicableGraphID",
 	"PlannedEffort",
 	"ActualEffort",
 	"Goal",
@@ -84,8 +88,12 @@ const definition: ListProvisionDefinition<EffortVariationFieldName, EffortVariat
 	defaultViewFields
 };
 
-export async function provisionEffortVariation(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionEffortVariation(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionEffortVariation;

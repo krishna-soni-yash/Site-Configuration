@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.AgingFindings;
 
 type AgingFindingsFieldName =
+	| "ApplicableGraphID"
 	| "ObservationLe7"
 	| "ObservationLe14"
 	| "ObservationGt14"
@@ -65,6 +68,7 @@ const fieldDefinitions: readonly FieldDefinition<AgingFindingsFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly AgingFindingsViewField[] = [
+	"ApplicableGraphID",
 	"ObservationLe7",
 	"ObservationLe14",
 	"ObservationGt14",
@@ -84,8 +88,12 @@ const definition: ListProvisionDefinition<AgingFindingsFieldName, AgingFindingsV
 	defaultViewFields
 };
 
-export async function provisionAgingFindings(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionAgingFindings(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionAgingFindings;

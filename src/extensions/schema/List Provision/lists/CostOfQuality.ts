@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.CostOfQuality;
 
 type CostOfQualityFieldName =
+	| "ApplicableGraphID"
 	| "PreventionCost"
 	| "AppraisalCost"
 	| "FailureCost"
@@ -70,6 +73,7 @@ const fieldDefinitions: readonly FieldDefinition<CostOfQualityFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly CostOfQualityViewField[] = [
+	"ApplicableGraphID",
 	"PreventionCost",
 	"AppraisalCost",
 	"FailureCost",
@@ -90,8 +94,12 @@ const definition: ListProvisionDefinition<CostOfQualityFieldName, CostOfQualityV
 	defaultViewFields
 };
 
-export async function provisionCostOfQuality(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionCostOfQuality(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionCostOfQuality;

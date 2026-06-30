@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
     ensureListProvision,
     FieldDefinition,
-    ListProvisionDefinition
+    ListProvisionDefinition,
+    createLookupFieldDefinition,
+    fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.OpenActionItems;
 
 type OpenActionItemsFieldName =
+    | "ApplicableGraphID"
     | "StatusOpenCount";
 
 type OpenActionItemsViewField = OpenActionItemsFieldName;
@@ -25,6 +28,7 @@ const fieldDefinitions: readonly FieldDefinition<OpenActionItemsFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly OpenActionItemsViewField[] = [
+    "ApplicableGraphID",
     "StatusOpenCount"
 ] as const;
 
@@ -36,8 +40,12 @@ const definition: ListProvisionDefinition<OpenActionItemsFieldName, OpenActionIt
     defaultViewFields
 };
 
-export async function provisionOpenActionItems(sp: SPFI): Promise<void> {
-    await ensureListProvision(sp, definition);
+export async function provisionOpenActionItems(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+    const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+    await ensureListProvision(sp, {
+        ...definition,
+        lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+    });
 }
 
 export default provisionOpenActionItems;

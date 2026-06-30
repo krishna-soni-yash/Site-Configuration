@@ -7,13 +7,16 @@ import "@pnp/sp/views";
 import {
     ensureListProvision,
     ListProvisionDefinition,
-    FieldDefinition
+    FieldDefinition,
+    createLookupFieldDefinition,
+    fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.ResourceUtilization;
 
 const resourceUtilizationFieldNames = [
+    "ApplicableGraphID",
     "Goal",
     "USL",
     "LSL",
@@ -24,7 +27,7 @@ const resourceUtilizationFieldNames = [
 ] as const;
 
 type ResourceUtilizationFieldName = typeof resourceUtilizationFieldNames[number];
-type ResourceUtilizationViewField = ResourceUtilizationFieldName | "LinkTitle";
+type ResourceUtilizationViewField = ResourceUtilizationFieldName | "LinkTitle" | "ApplicableGraphID";
 
 const textFieldNames: readonly ResourceUtilizationFieldName[] = [
     "Goal",
@@ -41,6 +44,7 @@ const numberFieldNames: readonly ResourceUtilizationFieldName[] = [
 
 const defaultViewFields: readonly ResourceUtilizationViewField[] = [
     "LinkTitle",
+    "ApplicableGraphID",
     "Goal",
     "USL",
     "LSL",
@@ -70,7 +74,8 @@ function buildFieldDefinitions(): FieldDefinition<ResourceUtilizationFieldName>[
     return definitions;
 }
 
-export async function provisionResourceUtilization(sp: SPFI): Promise<void> {
+export async function provisionResourceUtilization(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+    const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
     const fields = buildFieldDefinitions();
 
     const definition: ListProvisionDefinition<ResourceUtilizationFieldName, ResourceUtilizationViewField> = {
@@ -78,6 +83,7 @@ export async function provisionResourceUtilization(sp: SPFI): Promise<void> {
         description: "Resource utilization list",
         templateId: 100,
         fields,
+        lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)],
         defaultViewFields
     };
 

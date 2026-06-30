@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.CodeReviewEffortDensity;
 
 type CodeReviewEffortDensityFieldName =
+	| "ApplicableGraphID"
 	| "Goal"
 	| "USL"
 	| "LSL"
@@ -55,6 +58,7 @@ const fieldDefinitions: readonly FieldDefinition<CodeReviewEffortDensityFieldNam
 ] as const;
 
 const defaultViewFields: readonly CodeReviewEffortDensityViewField[] = [
+	"ApplicableGraphID",
 	"Goal",
 	"USL",
 	"LSL",
@@ -72,8 +76,12 @@ const definition: ListProvisionDefinition<CodeReviewEffortDensityFieldName, Code
 	defaultViewFields
 };
 
-export async function provisionCodeReviewEffortDensity(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionCodeReviewEffortDensity(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionCodeReviewEffortDensity;

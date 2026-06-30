@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
     ensureListProvision,
     FieldDefinition,
-    ListProvisionDefinition
+    ListProvisionDefinition,
+    createLookupFieldDefinition,
+    fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.OpenRootCause;
 
 type OpenRootCauseFieldName =
+    | "ApplicableGraphID"
     | "RootCauseCount";
 
 type OpenRootCauseViewField = OpenRootCauseFieldName;
@@ -25,6 +28,7 @@ const fieldDefinitions: readonly FieldDefinition<OpenRootCauseFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly OpenRootCauseViewField[] = [
+    "ApplicableGraphID",
     "RootCauseCount"
 ] as const;
 
@@ -36,8 +40,12 @@ const definition: ListProvisionDefinition<OpenRootCauseFieldName, OpenRootCauseV
     defaultViewFields
 };
 
-export async function provisionOpenRootCause(sp: SPFI): Promise<void> {
-    await ensureListProvision(sp, definition);
+export async function provisionOpenRootCause(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+    const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+    await ensureListProvision(sp, {
+        ...definition,
+        lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+    });
 }
 
 export default provisionOpenRootCause;

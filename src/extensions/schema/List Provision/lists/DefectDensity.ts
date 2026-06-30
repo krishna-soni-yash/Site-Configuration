@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.DefectDensity;
 
 type DefectDensityFieldName =
+	| "ApplicableGraphID"
 	| "Goal"
 	| "USL"
 	| "LSL"
@@ -60,6 +63,7 @@ const fieldDefinitions: readonly FieldDefinition<DefectDensityFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly DefectDensityViewField[] = [
+	"ApplicableGraphID",
 	"Goal",
 	"USL",
 	"LSL",
@@ -78,8 +82,12 @@ const definition: ListProvisionDefinition<DefectDensityFieldName, DefectDensityV
 	defaultViewFields
 };
 
-export async function provisionDefectDensity(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionDefectDensity(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionDefectDensity;

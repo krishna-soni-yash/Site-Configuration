@@ -33,6 +33,7 @@ export interface ListProvisionDefinition<TFieldName extends string, TViewField e
     description?: string;
     templateId?: number;
     fields?: readonly FieldDefinition<TFieldName>[];
+    lookupFields?: readonly FieldDefinition<string>[];
     updateFields?: readonly FieldUpdateDefinition<TFieldName>[];
     indexedFields?: readonly (TFieldName | string)[];
     defaultViewFields?: readonly TViewField[];
@@ -52,6 +53,17 @@ export interface EnsureListContentTypeOptions {
     ensureOnWeb?: boolean;
     order?: readonly string[];
     removeDefaultContentType?: boolean;
+}
+
+export function createLookupFieldDefinition<TInternalName extends string>(
+    internalName: TInternalName,
+    lookupListId: string,
+    displayName: string = internalName
+): FieldDefinition<TInternalName> {
+    return {
+        internalName,
+        schemaXml: `<Field Type='Lookup' Name='${internalName}' StaticName='${internalName}' DisplayName='${displayName}' List='${lookupListId}' ShowField='ID' LookupId='TRUE' />`
+    };
 }
 
 function normalizeListId(listTitle: string, raw: unknown): string {
@@ -141,6 +153,7 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
         description = "",
         templateId = 100,
         fields = [],
+        lookupFields = [],
         updateFields = [],
         indexedFields = [],
         defaultViewFields = [],
@@ -166,7 +179,9 @@ export async function ensureListProvision<TFieldName extends string, TViewField 
     const { byInternalName: existingFieldInternalNames, byTitle: existingFieldTitles } = await getExistingFieldLookup(list);
     const processedRequestedFields = new Set<string>();
 
-    for (const field of fields) {
+    const allFields = [...lookupFields, ...fields];
+
+    for (const field of allFields) {
         const requestedInternalName = `${field.internalName ?? ""}`.trim();
         const requestedInternalNameKey = requestedInternalName.toLowerCase();
         const requestedTitle = getSchemaAttributeValue(field.schemaXml, "DisplayName");

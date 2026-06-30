@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.TestExecutionEffortDensity;
 
 type TestExecutionEffortDensityFieldName =
+	| "ApplicableGraphID"
 	| "Goal"
 	| "USL"
 	| "LSL"
@@ -55,6 +58,7 @@ const fieldDefinitions: readonly FieldDefinition<TestExecutionEffortDensityField
 ] as const;
 
 const defaultViewFields: readonly TestExecutionEffortDensityViewField[] = [
+	"ApplicableGraphID",
 	"Goal",
 	"USL",
 	"LSL",
@@ -72,8 +76,12 @@ const definition: ListProvisionDefinition<TestExecutionEffortDensityFieldName, T
 	defaultViewFields
 };
 
-export async function provisionTestExecutionEffortDensity(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionTestExecutionEffortDensity(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionTestExecutionEffortDensity;

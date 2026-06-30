@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.PostDeliveryDefects;
 
 type PostDeliveryDefectsFieldName =
+	| "ApplicableGraphID"
 	| "Goal"
 	| "USL"
 	| "LSL"
@@ -60,6 +63,7 @@ const fieldDefinitions: readonly FieldDefinition<PostDeliveryDefectsFieldName>[]
 ] as const;
 
 const defaultViewFields: readonly PostDeliveryDefectsViewField[] = [
+	"ApplicableGraphID",
 	"Goal",
 	"USL",
 	"LSL",
@@ -78,8 +82,12 @@ const definition: ListProvisionDefinition<PostDeliveryDefectsFieldName, PostDeli
 	defaultViewFields
 };
 
-export async function provisionPostDeliveryDefects(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionPostDeliveryDefects(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionPostDeliveryDefects;

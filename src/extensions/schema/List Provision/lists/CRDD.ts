@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.CRDD;
 
 type CRDDFieldName =
+	| "ApplicableGraphID"
 	| "Goal"
 	| "USL"
 	| "LSL"
@@ -90,6 +93,7 @@ const fieldDefinitions: readonly FieldDefinition<CRDDFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly CRDDViewField[] = [
+	"ApplicableGraphID",
 	"Goal",
 	"USL",
 	"LSL",
@@ -114,8 +118,12 @@ const definition: ListProvisionDefinition<CRDDFieldName, CRDDViewField> = {
 	defaultViewFields
 };
 
-export async function provisionCRDD(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionCRDD(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionCRDD;

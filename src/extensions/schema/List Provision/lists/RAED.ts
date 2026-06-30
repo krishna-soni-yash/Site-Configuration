@@ -6,13 +6,16 @@ import "@pnp/sp/views";
 import {
 	ensureListProvision,
 	FieldDefinition,
-	ListProvisionDefinition
+	ListProvisionDefinition,
+	createLookupFieldDefinition,
+	fetchListId
 } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.RAED;
 
 type RAEDFieldName =
+	| "ApplicableGraphID"
 	| "Goal"
 	| "USL"
 	| "LSL"
@@ -90,6 +93,7 @@ const fieldDefinitions: readonly FieldDefinition<RAEDFieldName>[] = [
 ] as const;
 
 const defaultViewFields: readonly RAEDViewField[] = [
+	"ApplicableGraphID",
 	"Goal",
 	"USL",
 	"LSL",
@@ -114,8 +118,12 @@ const definition: ListProvisionDefinition<RAEDFieldName, RAEDViewField> = {
 	defaultViewFields
 };
 
-export async function provisionRAED(sp: SPFI): Promise<void> {
-	await ensureListProvision(sp, definition);
+export async function provisionRAED(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+	const resolvedApplicableGraphsListId = applicableGraphsListId ?? await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+	await ensureListProvision(sp, {
+		...definition,
+		lookupFields: [createLookupFieldDefinition("ApplicableGraphID", resolvedApplicableGraphsListId)]
+	});
 }
 
 export default provisionRAED;

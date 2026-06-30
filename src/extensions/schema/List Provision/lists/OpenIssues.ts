@@ -8,8 +8,8 @@ import {
     FieldDefinition,
     ListProvisionDefinition
 } from "../GenericListProvision";
+import { fetchListId } from "../GenericListProvision";
 import { RequiredListsProvision } from "../RequiredListProvision";
-import { provisionApplicableGraphs } from "./ApplicableGraphs";
 
 const LIST_TITLE = RequiredListsProvision.OpenIssues;
 
@@ -19,23 +19,8 @@ type OpenIssuesFieldName =
 
 type OpenIssuesViewField = OpenIssuesFieldName;
 
-function normalizeListId(id: unknown): string {
-    const value = `${id ?? ""}`;
-    if (value.length === 0) {
-        throw new Error("Unable to resolve ApplicableGraphs list identifier.");
-    }
-    return value.startsWith("{") ? value : `{${value}}`;
-}
-
 async function resolveApplicableGraphsListId(sp: SPFI): Promise<string> {
-    try {
-        const listInfo = await sp.web.lists.getByTitle(RequiredListsProvision.ApplicableGraphs).select("Id")();
-        return normalizeListId(listInfo.Id);
-    } catch (error) {
-        await provisionApplicableGraphs(sp);
-        const ensuredInfo = await sp.web.lists.getByTitle(RequiredListsProvision.ApplicableGraphs).select("Id")();
-        return normalizeListId(ensuredInfo.Id);
-    }
+    return fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
 }
 
 function buildFieldDefinitions(applicableGraphsListId: string): FieldDefinition<OpenIssuesFieldName>[] {
@@ -64,9 +49,9 @@ const definition: ListProvisionDefinition<OpenIssuesFieldName, OpenIssuesViewFie
     defaultViewFields
 };
 
-export async function provisionOpenIssues(sp: SPFI): Promise<void> {
-    const applicableGraphsListId = await resolveApplicableGraphsListId(sp);
-    const fields = buildFieldDefinitions(applicableGraphsListId);
+export async function provisionOpenIssues(sp: SPFI, applicableGraphsListId?: string): Promise<void> {
+    const resolvedApplicableGraphsListId = applicableGraphsListId ?? await resolveApplicableGraphsListId(sp);
+    const fields = buildFieldDefinitions(resolvedApplicableGraphsListId);
 
     await ensureListProvision(sp, {
         ...definition,

@@ -4,6 +4,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/fields";
 import "@pnp/sp/views";
+import { fetchListId } from "./GenericListProvision";
 
 export const RequiredListsProvision = {
     ProjectMetricLogs: "ProjectMetricLogs",
@@ -130,7 +131,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionOpenIssues } = await import('./lists/OpenIssues');
     const { provisionOpenActionItems } = await import('./lists/OpenActionItems');
 
-    provisionApplicableGraphs(sp);
+    await provisionApplicableGraphs(sp);
+    const applicableGraphsListId = await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
     provisionLlBpRc(sp);
     provisionProjectMetricLogs(sp);
     provisionEmailLogs(sp);
@@ -182,6 +184,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionFindingsSummary(sp);
     provisionAgingFindings(sp);
     provisionOpenRootCause(sp);
-    provisionOpenIssues(sp);
+    provisionOpenIssues(sp, applicableGraphsListId);
     provisionOpenActionItems(sp);
 }

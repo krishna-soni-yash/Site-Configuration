@@ -77,7 +77,8 @@ export const RequiredListsProvision = {
     OpenRootCause: "OpenRootCause",
     OpenIssues: "OpenIssues",
     OpenActionItems: "OpenActionItems",
-    SpillOverIndex: "SpillOverIndex"
+    SpillOverIndex: "SpillOverIndex",
+    Velocity: "Velocity",
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -141,6 +142,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionOpenIssues } = await import('./lists/OpenIssues');
     const { provisionOpenActionItems } = await import('./lists/OpenActionItems');
     const { provisionSpillOverIndex } = await import('./lists/SpillOverIndex');
+    const { provisionVelocity } = await import('./lists/Velocity');
 
     await provisionListSchemaVersion(sp);
 
@@ -223,7 +225,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenIssues)) provisionOpenIssues(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenActionItems)) provisionOpenActionItems(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SpillOverIndex)) provisionSpillOverIndex(sp, applicableGraphsListIdForUpdates);
-         
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.Velocity)) provisionVelocity(sp, applicableGraphsListIdForUpdates);
+
         schemaVersionList.items
             .getById(lastSchemaVersionEntry.ID)
             .update({ Title: `${CurrentSchemaVersion}` });
@@ -287,6 +290,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionOpenIssues(sp, applicableGraphsListId);
     provisionOpenActionItems(sp, applicableGraphsListId);
     provisionSpillOverIndex(sp, applicableGraphsListId);
+    provisionVelocity(sp, applicableGraphsListId);
 
     try {
         schemaVersionList.items.add({

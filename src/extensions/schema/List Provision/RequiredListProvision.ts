@@ -52,6 +52,7 @@ export const RequiredListsProvision = {
     TestingDefects: "Testing Defects",
     ReviewDefects: "Review Defects",
     MonthlyWorkdays: "MonthlyWorkdays",
+    SprintMaster: "SprintMaster",
 
     //Graphs Lists
     ApplicableGraphs: "ApplicableGraphs",
@@ -143,6 +144,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionOpenActionItems } = await import('./lists/OpenActionItems');
     const { provisionSpillOverIndex } = await import('./lists/SpillOverIndex');
     const { provisionVelocity } = await import('./lists/Velocity');
+    const { provisionSprintMaster } = await import('./lists/SprintMaster');
 
     await provisionListSchemaVersion(sp);
 
@@ -226,6 +228,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenActionItems)) provisionOpenActionItems(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SpillOverIndex)) provisionSpillOverIndex(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.Velocity)) provisionVelocity(sp, applicableGraphsListIdForUpdates);
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SprintMaster)) provisionSprintMaster(sp);
 
         schemaVersionList.items
             .getById(lastSchemaVersionEntry.ID)
@@ -291,6 +294,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionOpenActionItems(sp, applicableGraphsListId);
     provisionSpillOverIndex(sp, applicableGraphsListId);
     provisionVelocity(sp, applicableGraphsListId);
+    provisionSprintMaster(sp);
 
     try {
         schemaVersionList.items.add({

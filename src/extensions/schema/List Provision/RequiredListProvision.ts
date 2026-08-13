@@ -76,7 +76,8 @@ export const RequiredListsProvision = {
     AgingFindings: "AgingFindings",
     OpenRootCause: "OpenRootCause",
     OpenIssues: "OpenIssues",
-    OpenActionItems: "OpenActionItems"
+    OpenActionItems: "OpenActionItems",
+    SpillOverIndex: "SpillOverIndex"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -139,6 +140,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionOpenRootCause } = await import('./lists/OpenRootCause');
     const { provisionOpenIssues } = await import('./lists/OpenIssues');
     const { provisionOpenActionItems } = await import('./lists/OpenActionItems');
+    const { provisionSpillOverIndex } = await import('./lists/SpillOverIndex');
 
     await provisionListSchemaVersion(sp);
 
@@ -220,8 +222,9 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenRootCause)) provisionOpenRootCause(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenIssues)) provisionOpenIssues(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenActionItems)) provisionOpenActionItems(sp, applicableGraphsListIdForUpdates);
-
-         schemaVersionList.items
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SpillOverIndex)) provisionSpillOverIndex(sp, applicableGraphsListIdForUpdates);
+         
+        schemaVersionList.items
             .getById(lastSchemaVersionEntry.ID)
             .update({ Title: `${CurrentSchemaVersion}` });
 
@@ -230,7 +233,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
 
     await provisionApplicableGraphs(sp);
     const applicableGraphsListId = await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
-     provisionLlBpRc(sp);
+    provisionLlBpRc(sp);
     provisionProjectMetricLogs(sp);
     provisionEmailLogs(sp);
     provisionManagementTaskLog(sp);
@@ -283,6 +286,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionOpenRootCause(sp, applicableGraphsListId);
     provisionOpenIssues(sp, applicableGraphsListId);
     provisionOpenActionItems(sp, applicableGraphsListId);
+    provisionSpillOverIndex(sp, applicableGraphsListId);
 
     try {
         schemaVersionList.items.add({

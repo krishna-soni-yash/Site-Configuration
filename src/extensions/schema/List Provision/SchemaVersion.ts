@@ -1,4 +1,4 @@
-export const CurrentSchemaVersion = 1;
+export const CurrentSchemaVersion = 2;
 
 export const SelectedListsForSchemaProvision: readonly string[] = [
 	//"ProjectMetricLogs",
@@ -54,7 +54,8 @@ export const SelectedListsForSchemaProvision: readonly string[] = [
 	// "AgingFindings",
 	// "OpenRootCause",
 	// "OpenIssues",
-	// "OpenActionItems"
+	// "OpenActionItems",
+	"SpillOverIndex"
 ] as const;
 
 export const UpdatedListsForSchemaProvision: ReadonlySet<string> = new Set<string>([

@@ -22,7 +22,14 @@ type CodeReviewEffortDensityFieldName =
 	| "CodeReviewEffortDensity"
 	| "ActualCodeReviewEffort"
 	| "ActualSize"
-	| "ProjectType";
+	| "ProjectType"
+	| "CRED_LCL"
+	| "CRED_Mean"
+	| "CRED_UCL"
+	| "CRED_MR"
+	| "CRED_MR_LCL"
+	| "CRED_MR_Mean"
+	| "CRED_MR_UCL";
 
 type CodeReviewEffortDensityViewField = CodeReviewEffortDensityFieldName;
 
@@ -54,6 +61,34 @@ const fieldDefinitions: readonly FieldDefinition<CodeReviewEffortDensityFieldNam
 	{
 		internalName: "ProjectType",
 		schemaXml: `<Field Type='Text' Name='ProjectType' StaticName='ProjectType' DisplayName='ProjectType' MaxLength='255' />`
+	},
+	{
+		internalName: "CRED_LCL",
+		schemaXml: `<Field Type='Number' Name='CRED_LCL' StaticName='CRED_LCL' DisplayName='CRED_LCL' Decimals='2' />`
+	},
+	{
+		internalName: "CRED_Mean",
+		schemaXml: `<Field Type='Number' Name='CRED_Mean' StaticName='CRED_Mean' DisplayName='CRED_Mean' Decimals='2' />`
+	},
+	{
+		internalName: "CRED_UCL",
+		schemaXml: `<Field Type='Number' Name='CRED_UCL' StaticName='CRED_UCL' DisplayName='CRED_UCL' Decimals='2' />`
+	},
+	{
+		internalName: "CRED_MR",
+		schemaXml: `<Field Type='Number' Name='CRED_MR' StaticName='CRED_MR' DisplayName='CRED_MR' Decimals='2' />`
+	},
+	{
+		internalName: "CRED_MR_LCL",
+		schemaXml: `<Field Type='Number' Name='CRED_MR_LCL' StaticName='CRED_MR_LCL' DisplayName='CRED_MR_LCL' Decimals='2' />`
+	},
+	{
+		internalName: "CRED_MR_Mean",
+		schemaXml: `<Field Type='Number' Name='CRED_MR_Mean' StaticName='CRED_MR_Mean' DisplayName='CRED_MR_Mean' Decimals='2' />`
+	},
+	{
+		internalName: "CRED_MR_UCL",
+		schemaXml: `<Field Type='Number' Name='CRED_MR_UCL' StaticName='CRED_MR_UCL' DisplayName='CRED_MR_UCL' Decimals='2' />`
 	}
 ] as const;
 

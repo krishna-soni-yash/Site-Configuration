@@ -57,6 +57,8 @@ const projectMetricsFieldNames = [
     "SubUSL",
     "UnitOfMeasure",
     "USL",
+    "camelCaseMetricsFormulae",
+    "camelCaseSubMetricsFormulae",
     "camelCaseMetricsFormula",
     "camelCaseSubMetricsFormula"
 ] as const;
@@ -97,8 +99,8 @@ const textFieldNames: readonly ProjectMetricsFieldName[] = [
     "Subprocess",
     "SubUnitOfMeasure",
     "UnitOfMeasure",
-    "camelCaseMetricsFormula",
-    "camelCaseSubMetricsFormula"
+    "camelCaseMetricsFormulae",
+    "camelCaseSubMetricsFormulae"
 ] as const;
 
 const noteFieldNames: readonly ProjectMetricsFieldName[] = [
@@ -166,8 +168,8 @@ const defaultViewFields: readonly ProjectMetricsViewField[] = [
     "SubUSL",
     "DataInput",
     "VersionId",
-    "camelCaseMetricsFormula",
-    "camelCaseSubMetricsFormula"
+    "camelCaseMetricsFormulae",
+    "camelCaseSubMetricsFormulae"
 ] as const;
 
 const yesNoChoices = ["Yes", "No"] as const;
@@ -245,7 +247,10 @@ export async function provisionProjectMetrics(sp: SPFI): Promise<void> {
 
     const fields = buildFieldDefinitions(logsListId);
 
-    const removeExistingFields: readonly ProjectMetricsFieldName[] = [];
+    const removeExistingFields: readonly ProjectMetricsFieldName[] = [
+        "camelCaseMetricsFormula",
+        "camelCaseSubMetricsFormula"
+    ];
     
     const definition: ListProvisionDefinition<ProjectMetricsFieldName, ProjectMetricsViewField> = {
         title: LIST_TITLE,

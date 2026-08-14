@@ -5,6 +5,8 @@ import "@pnp/sp/fields";
 import "@pnp/sp/views";
 import {
     ensureListProvision,
+    createLookupFieldDefinition,
+    fetchListId,
     FieldDefinition,
     ListProvisionDefinition
 } from "../GenericListProvision";
@@ -35,34 +37,35 @@ type WorkLogFieldName =
     | "PlannedStartDate"
     | "PlannedEndDate"
     | "Status"
-    | "Remarks";
+    | "Remarks"
+    | "SprintNoID";
 
 type WorkLogViewField = WorkLogFieldName | "ID" | "Modified" | "Editor";
 
 const fieldDefinitions: readonly FieldDefinition<WorkLogFieldName>[] = [
-    { internalName: "ReqTitle", schemaXml: `<Field Type='Text' Name='ReqTitle' StaticName='ReqTitle' DisplayName='ReqTitle' MaxLength='255' />` },
-    { internalName: "AssignedToUsers", schemaXml: `<Field Type='User' Name='AssignedToUsers' StaticName='AssignedToUsers' DisplayName='AssignedToUsers' UserSelectionMode='PeopleOnly' Mult='TRUE' />` },
-    { internalName: "ProjectType", schemaXml: `<Field Type='Text' Name='ProjectType' StaticName='ProjectType' DisplayName='ProjectType' MaxLength='255' />` },
-    { internalName: "WorkItemNo", schemaXml: `<Field Type='Text' Name='WorkItemNo' StaticName='WorkItemNo' DisplayName='WorkItemNo' MaxLength='255' />` },
-    { internalName: "SprintNo", schemaXml: `<Field Type='Text' Name='SprintNo' StaticName='SprintNo' DisplayName='SprintNo' MaxLength='255' />` },
-    { internalName: "Simple", schemaXml: `<Field Type='Number' Name='Simple' StaticName='Simple' DisplayName='Simple' Decimals='2' />` },
-    { internalName: "Medium", schemaXml: `<Field Type='Number' Name='Medium' StaticName='Medium' DisplayName='Medium' Decimals='2' />` },
-    { internalName: "Complex", schemaXml: `<Field Type='Number' Name='Complex' StaticName='Complex' DisplayName='Complex' Decimals='2' />` },
-    { internalName: "VeryComplex", schemaXml: `<Field Type='Number' Name='VeryComplex' StaticName='VeryComplex' DisplayName='VeryComplex' Decimals='2' />` },
-    { internalName: "ComplexityPoints", schemaXml: `<Field Type='Number' Name='ComplexityPoints' StaticName='ComplexityPoints' DisplayName='ComplexityPoints' Decimals='2' />` },
-    { internalName: "AdjustedComplexityPoint", schemaXml: `<Field Type='Number' Name='AdjustedComplexityPoint' StaticName='AdjustedComplexityPoint' DisplayName='AdjustedComplexityPoint' Decimals='2' />` },
-    { internalName: "AppAndEnvAdjustmentFactor", schemaXml: `<Field Type='Number' Name='AppAndEnvAdjustmentFactor' StaticName='AppAndEnvAdjustmentFactor' DisplayName='AppAndEnvAdjustmentFactor' Decimals='2' />` },
-    { internalName: "SkillAdjustmentFactor", schemaXml: `<Field Type='Number' Name='SkillAdjustmentFactor' StaticName='SkillAdjustmentFactor' DisplayName='SkillAdjustmentFactor' Decimals='2' />` },
-    { internalName: "ReusabilityOfDesignAndCode", schemaXml: `<Field Type='Number' Name='ReusabilityOfDesignAndCode' StaticName='ReusabilityOfDesignAndCode' DisplayName='ReusabilityOfDesignAndCode' Decimals='2' />` },
-    { internalName: "ExtentOfAutomation", schemaXml: `<Field Type='Number' Name='ExtentOfAutomation' StaticName='ExtentOfAutomation' DisplayName='ExtentOfAutomation' Decimals='2' />` },
-    { internalName: "AdjustedEffort", schemaXml: `<Field Type='Number' Name='AdjustedEffort' StaticName='AdjustedEffort' DisplayName='AdjustedEffort' Decimals='2' />` },
-    { internalName: "BaseEffort", schemaXml: `<Field Type='Number' Name='BaseEffort' StaticName='BaseEffort' DisplayName='BaseEffort' Decimals='2' />` },
-    { internalName: "CalculatedPlannedEffort", schemaXml: `<Field Type='Number' Name='CalculatedPlannedEffort' StaticName='CalculatedPlannedEffort' DisplayName='CalculatedPlannedEffort' Decimals='2' />` },
-    { internalName: "ActualPlannedEffort", schemaXml: `<Field Type='Number' Name='ActualPlannedEffort' StaticName='ActualPlannedEffort' DisplayName='ActualPlannedEffort' Decimals='2' />` },
-    { internalName: "PlannedStartDate", schemaXml: `<Field Type='DateTime' Name='PlannedStartDate' StaticName='PlannedStartDate' DisplayName='PlannedStartDate' Format='DateOnly' />` },
-    { internalName: "PlannedEndDate", schemaXml: `<Field Type='DateTime' Name='PlannedEndDate' StaticName='PlannedEndDate' DisplayName='PlannedEndDate' Format='DateOnly' />` },
-    { internalName: "Status", schemaXml: `<Field Type='Text' Name='Status' StaticName='Status' DisplayName='Status' MaxLength='255' />` },
-    { internalName: "Remarks", schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />` }
+        { internalName: "ReqTitle", schemaXml: `<Field Type='Text' Name='ReqTitle' StaticName='ReqTitle' DisplayName='ReqTitle' MaxLength='255' />` },
+        { internalName: "AssignedToUsers", schemaXml: `<Field Type='User' Name='AssignedToUsers' StaticName='AssignedToUsers' DisplayName='AssignedToUsers' UserSelectionMode='PeopleOnly' Mult='TRUE' />` },
+        { internalName: "ProjectType", schemaXml: `<Field Type='Text' Name='ProjectType' StaticName='ProjectType' DisplayName='ProjectType' MaxLength='255' />` },
+        { internalName: "WorkItemNo", schemaXml: `<Field Type='Text' Name='WorkItemNo' StaticName='WorkItemNo' DisplayName='WorkItemNo' MaxLength='255' />` },
+        { internalName: "SprintNo", schemaXml: `<Field Type='Text' Name='SprintNo' StaticName='SprintNo' DisplayName='SprintNo' MaxLength='255' />` },
+        { internalName: "Simple", schemaXml: `<Field Type='Number' Name='Simple' StaticName='Simple' DisplayName='Simple' Decimals='2' />` },
+        { internalName: "Medium", schemaXml: `<Field Type='Number' Name='Medium' StaticName='Medium' DisplayName='Medium' Decimals='2' />` },
+        { internalName: "Complex", schemaXml: `<Field Type='Number' Name='Complex' StaticName='Complex' DisplayName='Complex' Decimals='2' />` },
+        { internalName: "VeryComplex", schemaXml: `<Field Type='Number' Name='VeryComplex' StaticName='VeryComplex' DisplayName='VeryComplex' Decimals='2' />` },
+        { internalName: "ComplexityPoints", schemaXml: `<Field Type='Number' Name='ComplexityPoints' StaticName='ComplexityPoints' DisplayName='ComplexityPoints' Decimals='2' />` },
+        { internalName: "AdjustedComplexityPoint", schemaXml: `<Field Type='Number' Name='AdjustedComplexityPoint' StaticName='AdjustedComplexityPoint' DisplayName='AdjustedComplexityPoint' Decimals='2' />` },
+        { internalName: "AppAndEnvAdjustmentFactor", schemaXml: `<Field Type='Number' Name='AppAndEnvAdjustmentFactor' StaticName='AppAndEnvAdjustmentFactor' DisplayName='AppAndEnvAdjustmentFactor' Decimals='2' />` },
+        { internalName: "SkillAdjustmentFactor", schemaXml: `<Field Type='Number' Name='SkillAdjustmentFactor' StaticName='SkillAdjustmentFactor' DisplayName='SkillAdjustmentFactor' Decimals='2' />` },
+        { internalName: "ReusabilityOfDesignAndCode", schemaXml: `<Field Type='Number' Name='ReusabilityOfDesignAndCode' StaticName='ReusabilityOfDesignAndCode' DisplayName='ReusabilityOfDesignAndCode' Decimals='2' />` },
+        { internalName: "ExtentOfAutomation", schemaXml: `<Field Type='Number' Name='ExtentOfAutomation' StaticName='ExtentOfAutomation' DisplayName='ExtentOfAutomation' Decimals='2' />` },
+        { internalName: "AdjustedEffort", schemaXml: `<Field Type='Number' Name='AdjustedEffort' StaticName='AdjustedEffort' DisplayName='AdjustedEffort' Decimals='2' />` },
+        { internalName: "BaseEffort", schemaXml: `<Field Type='Number' Name='BaseEffort' StaticName='BaseEffort' DisplayName='BaseEffort' Decimals='2' />` },
+        { internalName: "CalculatedPlannedEffort", schemaXml: `<Field Type='Number' Name='CalculatedPlannedEffort' StaticName='CalculatedPlannedEffort' DisplayName='CalculatedPlannedEffort' Decimals='2' />` },
+        { internalName: "ActualPlannedEffort", schemaXml: `<Field Type='Number' Name='ActualPlannedEffort' StaticName='ActualPlannedEffort' DisplayName='ActualPlannedEffort' Decimals='2' />` },
+        { internalName: "PlannedStartDate", schemaXml: `<Field Type='DateTime' Name='PlannedStartDate' StaticName='PlannedStartDate' DisplayName='PlannedStartDate' Format='DateOnly' />` },
+        { internalName: "PlannedEndDate", schemaXml: `<Field Type='DateTime' Name='PlannedEndDate' StaticName='PlannedEndDate' DisplayName='PlannedEndDate' Format='DateOnly' />` },
+        { internalName: "Status", schemaXml: `<Field Type='Text' Name='Status' StaticName='Status' DisplayName='Status' MaxLength='255' />` },
+        { internalName: "Remarks", schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />` }
 ] as const;
 
 const defaultViewFields: readonly WorkLogViewField[] = [
@@ -72,6 +75,7 @@ const defaultViewFields: readonly WorkLogViewField[] = [
     "ProjectType",
     "WorkItemNo",
     "SprintNo",
+    "SprintNoID",
     "Simple",
     "Medium",
     "Complex",
@@ -98,13 +102,19 @@ const definition: ListProvisionDefinition<WorkLogFieldName, WorkLogViewField> = 
     title: LIST_TITLE,
     description: "Work log management",
     templateId: 100,
-    fields: fieldDefinitions,
+    fields: undefined,
     indexedFields: ["WorkItemNo", "Status"],
     defaultViewFields
 };
 
-export async function provisionWorkLogManagement(sp: SPFI): Promise<void> {
-    await ensureListProvision(sp, definition);
+export async function provisionWorkLogManagement(sp: SPFI, sprintMasterListId?: string): Promise<void> {
+    const resolvedSprintMasterListId = sprintMasterListId ?? await fetchListId(sp, RequiredListsProvision.SprintMaster);
+
+    await ensureListProvision(sp, {
+        ...definition,
+        fields: fieldDefinitions,
+        lookupFields: [createLookupFieldDefinition("SprintNoID", resolvedSprintMasterListId)]
+    });
 }
 
 export default provisionWorkLogManagement;

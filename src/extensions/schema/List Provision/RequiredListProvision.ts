@@ -172,7 +172,10 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
 
         await provisionApplicableGraphs(sp);
         const applicableGraphsListIdForUpdates = await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
-
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SprintMaster)) await provisionSprintMaster(sp);
+        const sprintMasterListIdForUpdates = UpdatedListsForSchemaProvision.has(RequiredListsProvision.WorkLogManagement)
+            ? await fetchListId(sp, RequiredListsProvision.SprintMaster)
+            : undefined;
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.LlBpRc)) provisionLlBpRc(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ProjectMetricLogs)) provisionProjectMetricLogs(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.EmailLogs)) provisionEmailLogs(sp);
@@ -190,7 +193,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.RAIDLogs)) provisionRAIDLogs(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.RootCauseAnalysis)) provisionRootCauseAnalysis(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.CustomerSatisfactionIndex)) provisionCustomerSatisfactionIndex(sp);
-        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.WorkLogManagement)) provisionWorkLogManagement(sp);
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.WorkLogManagement)) provisionWorkLogManagement(sp, sprintMasterListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.PotentialBenefit)) provisionPotentialBenefit(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.TaskManagement)) provisionTaskManagement(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.AMSTicketLog)) provisionAMSTicketLog(sp);
@@ -228,7 +231,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenActionItems)) provisionOpenActionItems(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SpillOverIndex)) provisionSpillOverIndex(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.Velocity)) provisionVelocity(sp, applicableGraphsListIdForUpdates);
-        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SprintMaster)) provisionSprintMaster(sp);
 
         schemaVersionList.items
             .getById(lastSchemaVersionEntry.ID)
@@ -239,6 +241,8 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
 
     await provisionApplicableGraphs(sp);
     const applicableGraphsListId = await fetchListId(sp, RequiredListsProvision.ApplicableGraphs);
+    await provisionSprintMaster(sp);
+    const sprintMasterListId = await fetchListId(sp, RequiredListsProvision.SprintMaster);
     provisionLlBpRc(sp);
     provisionProjectMetricLogs(sp);
     provisionEmailLogs(sp);
@@ -256,7 +260,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionRAIDLogs(sp);
     provisionRootCauseAnalysis(sp);
     provisionCustomerSatisfactionIndex(sp);
-    provisionWorkLogManagement(sp);
+    provisionWorkLogManagement(sp, sprintMasterListId);
     provisionPotentialBenefit(sp);
     provisionTaskManagement(sp);
     provisionAMSTicketLog(sp);
@@ -294,7 +298,6 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionOpenActionItems(sp, applicableGraphsListId);
     provisionSpillOverIndex(sp, applicableGraphsListId);
     provisionVelocity(sp, applicableGraphsListId);
-    provisionSprintMaster(sp);
 
     try {
         schemaVersionList.items.add({

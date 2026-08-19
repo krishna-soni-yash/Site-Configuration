@@ -177,11 +177,13 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
             ? await fetchListId(sp, RequiredListsProvision.SprintMaster)
             : undefined;
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.LlBpRc)) provisionLlBpRc(sp);
-        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ProjectMetricLogs)) provisionProjectMetricLogs(sp);
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ProjectMetricLogs)) await provisionProjectMetricLogs(sp);
+        const projectMetricLogsListIdForUpdates = UpdatedListsForSchemaProvision.has(RequiredListsProvision.ProjectMetrics)
+            ? await fetchListId(sp, RequiredListsProvision.ProjectMetricLogs)
+            : undefined;
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.EmailLogs)) provisionEmailLogs(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ManagementTaskLog)) provisionManagementTaskLog(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.MinutesOfMeeting)) provisionMinutesOfMeeting(sp);
-        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ProjectMetrics)) provisionProjectMetrics(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ActionItemsTracker)) provisionActionItemsTracker(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.AdjustmentFactorValue)) provisionAdjustmentFactorValue(sp);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ComplexityWeightage)) provisionComplexityWeightage(sp);
@@ -231,6 +233,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.OpenActionItems)) provisionOpenActionItems(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SpillOverIndex)) provisionSpillOverIndex(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.Velocity)) provisionVelocity(sp, applicableGraphsListIdForUpdates);
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ProjectMetrics)) await provisionProjectMetrics(sp, projectMetricLogsListIdForUpdates);
 
         schemaVersionList.items
             .getById(lastSchemaVersionEntry.ID)
@@ -244,11 +247,11 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     await provisionSprintMaster(sp);
     const sprintMasterListId = await fetchListId(sp, RequiredListsProvision.SprintMaster);
     provisionLlBpRc(sp);
-    provisionProjectMetricLogs(sp);
+    await provisionProjectMetricLogs(sp);
+    const projectMetricLogsListId = await fetchListId(sp, RequiredListsProvision.ProjectMetricLogs);
     provisionEmailLogs(sp);
     provisionManagementTaskLog(sp);
     provisionMinutesOfMeeting(sp);
-    provisionProjectMetrics(sp);
     provisionActionItemsTracker(sp);
     provisionAdjustmentFactorValue(sp);
     provisionComplexityWeightage(sp);
@@ -273,6 +276,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionFacilitationReport(sp);
     provisionSDLCParams(sp);
     provisionReviewDefects(sp);
+    await provisionProjectMetrics(sp, projectMetricLogsListId);
     provisionResourceUtilization(sp, applicableGraphsListId);
     provisionCostOfQuality(sp, applicableGraphsListId);
     provisionScheduleVariation(sp, applicableGraphsListId);

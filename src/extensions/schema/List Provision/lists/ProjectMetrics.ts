@@ -6,6 +6,8 @@ import "@pnp/sp/fields";
 import "@pnp/sp/views";
 import {
     ensureListProvision,
+    createLookupFieldDefinition,
+    fetchListId,
     ListProvisionDefinition,
     FieldDefinition
 } from "../GenericListProvision";
@@ -57,8 +59,8 @@ const projectMetricsFieldNames = [
     "SubUSL",
     "UnitOfMeasure",
     "USL",
-    "camelCaseMetricsFormula",
-    "camelCaseSubMetricsFormula"
+    "camelCaseMetricsFormulae",
+    "camelCaseSubMetricsFormulae"
 ] as const;
 
 type ProjectMetricsFieldName = typeof projectMetricsFieldNames[number];
@@ -97,8 +99,8 @@ const textFieldNames: readonly ProjectMetricsFieldName[] = [
     "Subprocess",
     "SubUnitOfMeasure",
     "UnitOfMeasure",
-    "camelCaseMetricsFormula",
-    "camelCaseSubMetricsFormula"
+    "camelCaseMetricsFormulae",
+    "camelCaseSubMetricsFormulae"
 ] as const;
 
 const noteFieldNames: readonly ProjectMetricsFieldName[] = [
@@ -166,20 +168,15 @@ const defaultViewFields: readonly ProjectMetricsViewField[] = [
     "SubUSL",
     "DataInput",
     "VersionId",
-    "camelCaseMetricsFormula",
-    "camelCaseSubMetricsFormula"
+    "camelCaseMetricsFormulae",
+    "camelCaseSubMetricsFormulae"
 ] as const;
 
 const yesNoChoices = ["Yes", "No"] as const;
 const yesNoChoicesXml = yesNoChoices.map(choice => `<CHOICE>${choice}</CHOICE>`).join("");
 
-function buildFieldDefinitions(logsListId: string): FieldDefinition<ProjectMetricsFieldName>[] {
-    const definitions: FieldDefinition<ProjectMetricsFieldName>[] = [
-        {
-            internalName: "VersionId",
-            schemaXml: `<Field Type='Lookup' Name='VersionId' StaticName='VersionId' DisplayName='VersionId' List='${logsListId}' ShowField='ID' />`
-        }
-    ];
+function buildFieldDefinitions(): FieldDefinition<ProjectMetricsFieldName>[] {
+    const definitions: FieldDefinition<ProjectMetricsFieldName>[] = [];
 
     for (const internalName of yesNoChoiceFieldNames) {
         definitions.push({
@@ -219,31 +216,10 @@ function buildFieldDefinitions(logsListId: string): FieldDefinition<ProjectMetri
     return definitions;
 }
 
-export async function provisionProjectMetrics(sp: SPFI): Promise<void> {
-    let logsListId: string | undefined;
-
-    try {
-        const logsListInfo = await sp.web.lists.getByTitle(RequiredListsProvision.ProjectMetricLogs).select("Id")();
-        logsListId = `${logsListInfo.Id}`;
-    } catch (error) {
-        const ensureResult = await sp.web.lists.ensure(
-            RequiredListsProvision.ProjectMetricLogs,
-            "Project metrics logs list",
-            100
-        );
-        const ensuredInfo = await ensureResult.list.select("Id")();
-        logsListId = `${ensuredInfo.Id}`;
-    }
-
-    if (!logsListId) {
-        throw new Error("Unable to resolve Project Metric Logs list identifier.");
-    }
-
-    if (!logsListId.startsWith("{")) {
-        logsListId = `{${logsListId}}`;
-    }
-
-    const fields = buildFieldDefinitions(logsListId);
+export async function provisionProjectMetrics(sp: SPFI, projectMetricLogsListId?: string): Promise<void> {
+    const resolvedProjectMetricLogsListId = projectMetricLogsListId
+        ?? await fetchListId(sp, RequiredListsProvision.ProjectMetricLogs);
+    const fields = buildFieldDefinitions();
 
     const removeExistingFields: readonly ProjectMetricsFieldName[] = [];
     
@@ -252,6 +228,7 @@ export async function provisionProjectMetrics(sp: SPFI): Promise<void> {
         description: "Project metrics list",
         templateId: 100,
         fields,
+        lookupFields: [createLookupFieldDefinition("VersionId", resolvedProjectMetricLogsListId)],
         defaultViewFields,
         removeFields: removeExistingFields
     };

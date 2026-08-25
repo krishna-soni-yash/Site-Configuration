@@ -13,7 +13,7 @@ import { RequiredListsProvision } from "../RequiredListProvision";
 
 const LIST_TITLE = RequiredListsProvision.MonthlyWorkdays;
 
-type MonthlyWorkdaysFieldName = "Year" | "Days";
+type MonthlyWorkdaysFieldName = "Year" | "Days" | "ResourceAllocation";
 type MonthlyWorkdaysViewField = MonthlyWorkdaysFieldName;
 
 const fieldDefinitions: readonly FieldDefinition<MonthlyWorkdaysFieldName>[] = [
@@ -24,12 +24,17 @@ const fieldDefinitions: readonly FieldDefinition<MonthlyWorkdaysFieldName>[] = [
 	{
 		internalName: "Days",
 		schemaXml: "<Field Type='Number' Name='Days' StaticName='Days' DisplayName='Days' />"
+	},
+	{
+		internalName: "ResourceAllocation",
+		schemaXml: `<Field Type='Number' Name='ResourceAllocation' StaticName='ResourceAllocation' DisplayName='ResourceAllocation' />`
 	}
 ] as const;
 
 const defaultViewFields: readonly MonthlyWorkdaysViewField[] = [
 	"Year",
-	"Days"
+	"Days",
+	"ResourceAllocation"
 ] as const;
 
 const definition: ListProvisionDefinition<MonthlyWorkdaysFieldName, MonthlyWorkdaysViewField> = {

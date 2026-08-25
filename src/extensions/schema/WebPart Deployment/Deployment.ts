@@ -16,27 +16,38 @@ import {
 import { CheckinType } from "@pnp/sp/files";
 
 import WebPartList, { IListBindingConfig, IWebPartEntry } from './WebPartList';
+import {
+	CurrentWebPartPageVersion,
+	ensureWebPartPageVersionList,
+	getWebPartPageVersion,
+	recordWebPartPageVersion
+} from './WebPartPageVersion';
 
 const normalizeGuid = (value?: string): string => (value || '').replace(/[{}]/g, '').toLowerCase();
 
 export async function deployWebParts(spInstance?: SPFI): Promise<void> {
-		const sp: SPFI = spInstance || (pnp as any).sp || (pnp as any).default || (pnp as unknown as SPFI);
-		const webInfo = await sp.web.select("ServerRelativeUrl")();
-		const webRel = webInfo?.ServerRelativeUrl || '';
+	const sp: SPFI = spInstance || (pnp as any).sp || (pnp as any).default || (pnp as unknown as SPFI);
+	await ensureWebPartPageVersionList(sp);
+	const recordedPageVersion = await getWebPartPageVersion(sp);
+	if (recordedPageVersion.version >= CurrentWebPartPageVersion) {
+		console.info(`Web part deployment skipped. Recorded page version: ${recordedPageVersion.version}.`);
+		return;
+	}
+
+	const webInfo = await sp.web.select("ServerRelativeUrl")();
+	const webRel = webInfo?.ServerRelativeUrl || '';
 	const webRelNoSlash = webRel.replace(/\/$/, '');
-
 	const availableWebparts = await getWebpartDefinitions(sp);
-
 	for (const entry of WebPartList) {
 		const pageFileName = `${entry.pageName}.aspx`;
 		const pageServerRelativeUrl = `${webRelNoSlash}/SitePages/${pageFileName}`;
-
 		let page: IClientsidePage | undefined = await loadExistingPage(sp, pageServerRelativeUrl);
 		let createdNewPage = false;
 
 		if (!page) {
 			const alreadyExists = await pageExists(sp, pageServerRelativeUrl);
 			if (alreadyExists) {
+				console.error(`Unable to load existing page ${entry.pageName}, skipping webpart add.`);
 				continue;
 			}
 			page = await createClientsidePage(sp, pageFileName, entry.pageName);
@@ -55,17 +66,13 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 				continue;
 			}
 
-			const alreadyHasWebpart = hasWebpart(page, componentDef);
-			if (alreadyHasWebpart) {
+			if (hasWebpart(page, componentDef)) {
 				continue;
 			}
 
 			const webpartControl = ClientsideWebpart.fromComponentDef(componentDef);
 			await configureWebpart(sp, webpartControl, entry);
-
-			const targetColumn = ensureDefaultColumn(page);
-			targetColumn.addControl(webpartControl);
-
+			ensureDefaultColumn(page).addControl(webpartControl);
 			await page.save(true);
 			await finalizePage(sp, pageServerRelativeUrl);
 
@@ -76,6 +83,8 @@ export async function deployWebParts(spInstance?: SPFI): Promise<void> {
 			console.error(`Failed to add webpart ${describeEntry(entry)} to page ${entry.pageName}:`, e);
 		}
 	}
+
+	await recordWebPartPageVersion(sp, recordedPageVersion.itemId);
 }
 
 async function loadExistingPage(sp: SPFI, pageServerRelativeUrl: string): Promise<IClientsidePage | undefined> {

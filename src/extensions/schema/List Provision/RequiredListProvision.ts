@@ -80,6 +80,7 @@ export const RequiredListsProvision = {
     OpenActionItems: "OpenActionItems",
     SpillOverIndex: "SpillOverIndex",
     Velocity: "Velocity",
+    PCI: "PCI"
 };
 
 export function createPnpSpfx(context: any): SPFI {
@@ -145,6 +146,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     const { provisionSpillOverIndex } = await import('./lists/SpillOverIndex');
     const { provisionVelocity } = await import('./lists/Velocity');
     const { provisionSprintMaster } = await import('./lists/SprintMaster');
+    const { provisionPCI } = await import('./lists/PCI');
 
     await provisionListSchemaVersion(sp);
 
@@ -234,6 +236,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.SpillOverIndex)) provisionSpillOverIndex(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.Velocity)) provisionVelocity(sp, applicableGraphsListIdForUpdates);
         if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.ProjectMetrics)) await provisionProjectMetrics(sp, projectMetricLogsListIdForUpdates);
+        if (UpdatedListsForSchemaProvision.has(RequiredListsProvision.PCI)) await provisionPCI(sp, applicableGraphsListIdForUpdates);
 
         schemaVersionList.items
             .getById(lastSchemaVersionEntry.ID)
@@ -302,6 +305,7 @@ export async function provisionRequiredLists(sp: SPFI): Promise<void> {
     provisionOpenActionItems(sp, applicableGraphsListId);
     provisionSpillOverIndex(sp, applicableGraphsListId);
     provisionVelocity(sp, applicableGraphsListId);
+    provisionPCI(sp, applicableGraphsListId);
 
     try {
         schemaVersionList.items.add({

@@ -29,15 +29,18 @@ enum WebParts{
 	EstimationsWebPart = '1e0bf94d-fcd7-4556-97ac-a334deb8ff36',
 	HideBannerWebPart = '137d8eae-8e43-42fd-ad03-52842b02daeb',
 	DefectsWebPart = 'd199e076-7cf1-4458-a274-eef36888c787',
-	CustomerSatisfactionIndexWebPart = '160bd2bf-b186-466d-9710-9a57a652cdca'
+	CustomerSatisfactionIndexWebPart = '160bd2bf-b186-466d-9710-9a57a652cdca',
+	FooterWebPart = '9b6f63a3-953a-4b11-96b0-b05763fb3179'
 }
 
 export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.HomePageWebPart, pageName: 'Audit', homePage: false },
 	{ id: WebParts.AuditWebPart, pageName: 'Audit', homePage: false },
-	
+	{ id: WebParts.FooterWebPart, pageName: 'Audit', homePage: false },
+
 	{ id: WebParts.HomePageWebPart, pageName: 'Defects-Lists', homePage: false },
 	{ id: WebParts.DefectsWebPart, pageName: 'Defects-Lists', homePage: false },
+	{ id: WebParts.FooterWebPart, pageName: 'Defects-Lists', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Documents', homePage: false },
 	{ id: WebParts.HideBannerWebPart, pageName: 'Documents', homePage: false },
@@ -50,28 +53,36 @@ export const WebPartList: IWebPartEntry[] = [
 			isDocumentLibrary: true
 		},
 	},
+	{ id: WebParts.FooterWebPart, pageName: 'Documents', homePage: false },
 	
 	{ id: WebParts.HomePageWebPart, pageName: 'Home', homePage: true },
-	{ id: WebParts.HideBannerWebPart, pageName: 'Home', homePage: true },
+	//{ id: WebParts.HideBannerWebPart, pageName: 'Home', homePage: true },
 	{ id: WebParts.MetricsDashBoardWebPart, pageName: 'Home', homePage: true },
+	{ id: WebParts.FooterWebPart, pageName: 'Home', homePage: true },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'MoM-ActionItem', homePage: false },
 	{ id: WebParts.MOMWebPart, pageName: 'MoM-ActionItem', homePage: false },
+	{ id: WebParts.FooterWebPart, pageName: 'MoM-ActionItem', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'RCA-And-Raid-Logs', homePage: false },
 	{ id: WebParts.RootCauseAnalysisWebPart, pageName: 'RCA-And-Raid-Logs', homePage: false },
+	{ id: WebParts.FooterWebPart, pageName: 'RCA-And-Raid-Logs', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'PPO', homePage: false },
 	{ id: WebParts.PPOWebPart, pageName: 'PPO', homePage: false },
+	{ id: WebParts.FooterWebPart, pageName: 'PPO', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'AMS', homePage: false },
 	{ id: WebParts.AMSWebpart, pageName: 'AMS', homePage: false },
+	{ id: WebParts.FooterWebPart, pageName: 'AMS', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Estimations', homePage: false },
 	{ id: WebParts.EstimationsWebPart, pageName: 'Estimations', homePage: false },
+	{ id: WebParts.FooterWebPart, pageName: 'Estimations', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'CSI', homePage: false },
-	{ id: WebParts.CustomerSatisfactionIndexWebPart, pageName: 'CSI', homePage: false }
+	{ id: WebParts.CustomerSatisfactionIndexWebPart, pageName: 'CSI', homePage: false },
+	{ id: WebParts.FooterWebPart, pageName: 'CSI', homePage: false }
 ];
 
 export default WebPartList;

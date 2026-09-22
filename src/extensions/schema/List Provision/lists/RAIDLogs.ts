@@ -42,7 +42,8 @@ type RAIDLogsFieldName =
 	| "Effectiveness"
 	| "ImpactValue"
 	| "ProbabilityValue"
-	| "OpportunityValue";
+	| "OpportunityValue"
+	| "RaidLogID";
 
 type RAIDLogsViewField = RAIDLogsFieldName | "ID" | "Modified" | "Editor";
 
@@ -180,6 +181,10 @@ const fieldDefinitions: readonly FieldDefinition<RAIDLogsFieldName>[] = [
 	{
 		internalName: "OpportunityValue",
 		schemaXml: `<Field Type='Number' Name='OpportunityValue' StaticName='OpportunityValue' DisplayName='OpportunityValue' Decimals='2' />`
+	},
+	{
+		internalName: "RaidLogID",
+		schemaXml: `<Field Type='Text' Name='RaidLogID' StaticName='RaidLogID' DisplayName='RaidLogID' MaxLength='255' />`
 	}
 ] as const;
 
@@ -216,7 +221,8 @@ const defaultViewFields: readonly RAIDLogsViewField[] = [
 	"Effectiveness",
 	"ImpactValue",
 	"ProbabilityValue",
-	"OpportunityValue"
+	"OpportunityValue",
+	"RaidLogID"
 ] as const;
 
 const fieldDisplayNameUpdates: Partial<Record<RAIDLogsFieldName, string>> = {
@@ -234,7 +240,8 @@ const fieldDisplayNameUpdates: Partial<Record<RAIDLogsFieldName, string>> = {
 	ActualDate: "Actual Date",
 	ImpactValue: "Impact Value (1 to 10)",
 	ProbabilityValue: "Probability Value(1 to 10)",
-	OpportunityValue: "Opportunity Value"
+	OpportunityValue: "Opportunity Value",
+	RaidLogID: "RAIDLogID"
 };
 
 async function applyFieldDisplayNames(sp: SPFI): Promise<void> {

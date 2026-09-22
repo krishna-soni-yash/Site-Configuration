@@ -22,7 +22,7 @@ enum WebParts{
  	HomePageWebPart = 'c2bf64bf-1b62-4aaf-9064-5b0793ce1829',
 	MOMWebPart = '28449fdc-6c05-47a1-b58e-53d9911420a2',
 	AuditWebPart = 'b244e89f-48d8-4cd7-b447-c9c5b4ccafa9',
- 	MetricsDashBoardWebPart = 'a9feb4c3-cca4-418d-b6b6-28a4263c8f79',
+ 	MetricsDashBoardWebPart = '75e7d5ba-b4ae-42cd-a3ba-cff52f5f4056',
 	RootCauseAnalysisWebPart = 'b77d3069-e9d7-4521-a93c-a7ec0b2dfa50',
 	PPOWebPart = 'aec7bd2e-5d17-4a98-89c0-ddb541197235',
 	AMSWebpart = 'bc0d2a5f-1168-4a7b-b218-6b39bffd9e11',

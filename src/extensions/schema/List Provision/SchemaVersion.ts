@@ -1,4 +1,4 @@
-export const CurrentSchemaVersion = 4;
+export const CurrentSchemaVersion = 5;
 
 export const SelectedListsForSchemaProvision: readonly string[] = [
 	//"ProjectMetricLogs",
@@ -16,7 +16,7 @@ export const SelectedListsForSchemaProvision: readonly string[] = [
 	// "ImpactValue",
 	// "PotentialBenefit",
 	// "PotentialCost",
-	 "RAIDLogs",
+	// "RAIDLogs",
 	// "ProbabilityValue",
 	// "RAIDDescription",
 	// "AMSTicketLog",
@@ -30,7 +30,7 @@ export const SelectedListsForSchemaProvision: readonly string[] = [
 	// "TaskManagement",
 	// "Code Review Defects",
 	// "Testing Defects",
-	// "Review Defects",
+	 "Review Defects",
 	// "MonthlyWorkdays",
 	// "ApplicableGraphs",
 	// "ResourceUtilization",

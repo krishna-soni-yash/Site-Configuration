@@ -32,7 +32,8 @@ type ReviewDefectsFieldName =
 	| "Status"
 	| "ReviewResults"
 	| "CorrectionCorrectiveAction"
-	| "Remarks";
+	| "Remarks"
+	| "CodeFileAuthorDeveloperName";
 
 type ReviewDefectsViewField = ReviewDefectsFieldName | "ID" | "Modified" | "Editor" | "Title";
 
@@ -169,6 +170,10 @@ function buildFieldDefinitions(): FieldDefinition<ReviewDefectsFieldName>[] {
 		{
 			internalName: "Remarks",
 			schemaXml: `<Field Type='Note' Name='Remarks' StaticName='Remarks' DisplayName='Remarks' NumLines='6' RichText='FALSE' />`
+		},
+		{
+			internalName: "CodeFileAuthorDeveloperName",
+			schemaXml: `<Field Type='User' Name='CodeFileAuthorDeveloperName' StaticName='CodeFileAuthorDeveloperName' DisplayName='CodeFileAuthorDeveloperName' UserSelectionMode='PeopleOnly' Mult='TRUE' />`
 		}
 	];
 }
@@ -192,7 +197,8 @@ const defaultViewFields: readonly ReviewDefectsViewField[] = [
 	"Status",
 	"ReviewResults",
 	"CorrectionCorrectiveAction",
-	"Remarks"
+	"Remarks",
+	"CodeFileAuthorDeveloperName"
 ] as const;
 
 async function ensureArtifactNameField(sp: SPFI): Promise<void> {

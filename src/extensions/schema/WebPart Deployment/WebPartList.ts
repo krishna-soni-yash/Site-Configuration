@@ -1,6 +1,4 @@
 /*eslint-disable*/
-import { ProjectDocumentsLibraryName } from '../Library Provsion/libraries/ProjectDocuments';
-
 export interface IListBindingConfig {
 	listTitle: string;
 	listId?: string;

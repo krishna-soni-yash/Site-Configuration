@@ -42,7 +42,6 @@ export const WebPartList: IWebPartEntry[] = [
 	{ id: WebParts.FooterWebPart, pageName: 'Defects-Lists', homePage: false },
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Documents', homePage: false },
-	{ id: WebParts.HideBannerWebPart, pageName: 'Documents', homePage: false },
 	{ id: WebParts.DocumentLibraryWebPart, pageName: 'Documents', homePage: false },
 	{ id: WebParts.FooterWebPart, pageName: 'Documents', homePage: false },
 	

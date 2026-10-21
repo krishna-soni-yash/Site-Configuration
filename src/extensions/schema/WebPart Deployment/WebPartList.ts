@@ -30,7 +30,8 @@ enum WebParts{
 	HideBannerWebPart = '137d8eae-8e43-42fd-ad03-52842b02daeb',
 	DefectsWebPart = 'd199e076-7cf1-4458-a274-eef36888c787',
 	CustomerSatisfactionIndexWebPart = '160bd2bf-b186-466d-9710-9a57a652cdca',
-	FooterWebPart = '9b6f63a3-953a-4b11-96b0-b05763fb3179'
+	FooterWebPart = '9b6f63a3-953a-4b11-96b0-b05763fb3179',
+	DocumentLibraryWebPart = '89ca5466-f06c-4d6b-b56e-6bde06ec449b'
 }
 
 export const WebPartList: IWebPartEntry[] = [
@@ -44,15 +45,7 @@ export const WebPartList: IWebPartEntry[] = [
 
 	{ id: WebParts.HomePageWebPart, pageName: 'Documents', homePage: false },
 	{ id: WebParts.HideBannerWebPart, pageName: 'Documents', homePage: false },
-	{
-		alias: 'ListWebPart',
-		pageName: 'Documents',
-		listBinding: {
-			listTitle: ProjectDocumentsLibraryName,
-			webPartTitle: 'Project Documents',
-			isDocumentLibrary: true
-		},
-	},
+	{ id: WebParts.DocumentLibraryWebPart, pageName: 'Documents', homePage: false },
 	{ id: WebParts.FooterWebPart, pageName: 'Documents', homePage: false },
 	
 	{ id: WebParts.HomePageWebPart, pageName: 'Home', homePage: true },
